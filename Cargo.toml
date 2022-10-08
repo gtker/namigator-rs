@@ -1,0 +1,2 @@
+[workspace]
+members = ["namigator-sys", "namigator-rs"]

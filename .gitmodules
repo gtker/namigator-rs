@@ -1,0 +1,3 @@
+[submodule "namigator-sys/vendor"]
+	path = namigator-sys/vendor
+	url = https://github.com/namreeb/namigator/

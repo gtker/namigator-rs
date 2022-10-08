@@ -1,0 +1,11 @@
+[package]
+name = "namigator-sys"
+version = "0.1.0"
+edition = "2021"
+
+links = "namigator"
+
+exclude = ["vendor/namigator/test", ".git"]
+
+[build-dependencies]
+cmake = "0.1"
