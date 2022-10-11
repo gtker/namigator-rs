@@ -1,3 +1,1 @@
-Requires in the path:
-
-* `cmake`
+Requires a C++ compiler.
