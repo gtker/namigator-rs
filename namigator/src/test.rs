@@ -1,7 +1,7 @@
 use crate::build::{build_bvh, build_map};
 use crate::error::NamigatorError;
 use crate::pathfind::PathfindMap;
-use namigator_sys::Vertex;
+use crate::Vector3d;
 
 const MAP_NAME: &str = "development";
 
@@ -51,12 +51,12 @@ fn test_pathfind(temp_directory: &str) {
 
     let path = map
         .find_path(
-            Vertex {
+            Vector3d {
                 x: START_X,
                 y: START_Y,
                 z: START_Z,
             },
-            Vertex {
+            Vector3d {
                 x: END_X,
                 y: END_Y,
                 z: END_Z,

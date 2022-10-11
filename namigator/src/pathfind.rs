@@ -7,11 +7,17 @@ use namigator_sys::{
 };
 use std::ffi::{c_uint, CString};
 use std::path::Path;
+pub use wow_world_base::vanilla::Vector3d;
 
 #[derive(Debug)]
 pub struct PathfindMap {
     map: *const namigator_sys::Map,
-    path: Vec<Vertex>,
+    // Vector3d does not have repr(c) so we can't be sure that it's correctly set up
+    // The benefits of having interop with a wow_world_base type far outweighs the extra
+    // ~124 bytes of storage for the vec.
+    // This might be replaceable with a const array if we get hard limitations from namigator
+    inner_path: Vec<Vertex>,
+    path: Vec<Vector3d>,
     height: Vec<f32>,
 }
 
@@ -43,7 +49,8 @@ impl PathfindMap {
 
             Ok(PathfindMap {
                 map,
-                path: vec![Vertex::default(); INITIAL_VEC_SIZE],
+                inner_path: vec![Vertex::default(); INITIAL_VEC_SIZE],
+                path: vec![Vector3d::default(); INITIAL_VEC_SIZE],
                 height: vec![f32::default(); INITIAL_VEC_SIZE],
             })
         }
@@ -112,7 +119,11 @@ impl PathfindMap {
         Ok((out_zone, out_area))
     }
 
-    pub fn find_path(&mut self, start: Vertex, stop: Vertex) -> Result<&[Vertex], NamigatorError> {
+    pub fn find_path(
+        &mut self,
+        start: Vector3d,
+        stop: Vector3d,
+    ) -> Result<&[Vector3d], NamigatorError> {
         let mut amount_of_vertices: c_uint = 0;
 
         let result = unsafe {
@@ -124,19 +135,17 @@ impl PathfindMap {
                 stop.x,
                 stop.y,
                 stop.z,
-                self.path.as_mut_ptr(),
-                self.path.len() as c_uint,
+                self.inner_path.as_mut_ptr(),
+                self.inner_path.len() as c_uint,
                 &mut amount_of_vertices as *const c_uint,
             )
         };
 
         if result == SUCCESS {
+            self.transfer_paths();
             return Ok(&self.path[..usize::try_from(amount_of_vertices).unwrap()]);
         } else if result == BUFFER_TOO_SMALL {
-            self.path.resize(
-                usize::try_from(amount_of_vertices).unwrap(),
-                Vertex::default(),
-            );
+            self.resize_paths(amount_of_vertices);
 
             let result = unsafe {
                 pathfind_find_path(
@@ -147,13 +156,14 @@ impl PathfindMap {
                     stop.x,
                     stop.y,
                     stop.z,
-                    self.path.as_mut_ptr(),
-                    self.path.len() as c_uint,
+                    self.inner_path.as_mut_ptr(),
+                    self.inner_path.len() as c_uint,
                     &mut amount_of_vertices as *const c_uint,
                 )
             };
 
             if result == SUCCESS {
+                self.transfer_paths();
                 return Ok(&self.path[..usize::try_from(amount_of_vertices).unwrap()]);
             } else {
                 panic!("buffer was too small even after making it larger")
@@ -200,6 +210,20 @@ impl PathfindMap {
         }
 
         Err(error_code_to_error(result))
+    }
+
+    fn resize_paths(&mut self, size: u32) {
+        let size = usize::try_from(size).unwrap();
+        self.inner_path.resize(size, Vertex::default());
+        self.path.resize(size, Vector3d::default());
+    }
+
+    fn transfer_paths(&mut self) {
+        for (i, v) in self.inner_path.iter().enumerate() {
+            self.path[i].x = v.x;
+            self.path[i].y = v.y;
+            self.path[i].z = v.z;
+        }
     }
 }
 
