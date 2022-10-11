@@ -1,6 +1,7 @@
 #![no_std]
 
-extern crate alloc;
+#[cfg(test)]
+extern crate alloc; // Necessary for CStrings
 
 #[cfg(test)]
 mod test;
