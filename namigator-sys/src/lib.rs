@@ -8,13 +8,14 @@ mod test;
 use core::ffi::{c_char, c_float, c_uchar, c_uint};
 
 #[repr(C)]
+#[derive(Debug)]
 pub struct Map {
     _data: [u8; 0],
     _marker: core::marker::PhantomData<(*mut u8, core::marker::PhantomPinned)>,
 }
 
 #[repr(C)]
-#[derive(Copy, Clone, PartialOrd, PartialEq, Default)]
+#[derive(Debug, Copy, Clone, PartialOrd, PartialEq, Default)]
 pub struct Vertex {
     pub x: f32,
     pub y: f32,

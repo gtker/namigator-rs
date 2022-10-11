@@ -117,6 +117,7 @@ pub fn build_map(
     )
 }
 
+#[derive(Debug)]
 pub struct PathfindMap {
     map: *const namigator_sys::Map,
     path: Vec<Vertex>,
