@@ -184,10 +184,7 @@ extern "C" {
         buffer_length: c_uint,
         amount_of_heights: *const c_uint,
     ) -> c_uchar;
-}
 
-#[link(name = "namigator")]
-extern "C" {
     pub fn mapbuild_build_bvh(
         data_path: *const c_char,
         output_path: *const c_char,
