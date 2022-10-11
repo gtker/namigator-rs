@@ -1,3 +1,4 @@
+use crate::error::NamigatorError;
 use crate::{build_bvh, build_map, Map};
 use namigator_sys::Vertex;
 use std::ffi::CString;
@@ -16,7 +17,13 @@ fn test_build(temp_directory: &str, data_directory: &str) {
     let map_name = CString::new(MAP_NAME).unwrap();
     let threads = 8;
 
-    build_bvh(data_directory, temp_directory, threads).unwrap();
+    match build_bvh(data_directory, temp_directory, threads) {
+        Ok(_) => {}
+        Err(e) => match e {
+            NamigatorError::FailedToOpenDbc => {} // Default test file does not include DBC
+            _ => panic!(),
+        },
+    }
     build_map(data_directory, temp_directory, &map_name, "", threads).unwrap();
     test_pathfind(temp_directory);
 }
