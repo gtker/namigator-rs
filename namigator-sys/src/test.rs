@@ -60,6 +60,7 @@ fn test_pathfind(temp_directory: &str) {
         )
     };
     assert!(!map.is_null());
+    assert_eq!(result, SUCCESS);
 
     const X: f32 = 16271.025391;
     const Y: f32 = 16845.421875;
