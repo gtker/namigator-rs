@@ -260,6 +260,8 @@ impl PathfindMap {
 
             if result == SUCCESS {
                 return Ok(&self.path[..usize::try_from(amount_of_vertices).unwrap()]);
+            } else {
+                panic!("buffer was too small even after making it larger")
             }
         }
 
