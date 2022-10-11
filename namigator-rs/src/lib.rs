@@ -117,14 +117,14 @@ pub fn build_map(
     )
 }
 
-pub struct Map {
+pub struct PathfindMap {
     map: *const namigator_sys::Map,
     path: Vec<Vertex>,
     height: Vec<f32>,
 }
 
 const INITIAL_VEC_SIZE: usize = 10;
-impl Map {
+impl PathfindMap {
     pub fn new(data_path: &str, map_name: &str) -> Result<Self, NamigatorError> {
         let data_path = CString::new(data_path)?;
         let map_name = CString::new(map_name)?;
@@ -305,7 +305,7 @@ impl Map {
     }
 }
 
-impl Drop for Map {
+impl Drop for PathfindMap {
     fn drop(&mut self) {
         unsafe { pathfind_free_map(self.map) }
     }

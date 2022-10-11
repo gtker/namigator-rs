@@ -1,5 +1,5 @@
 use crate::error::NamigatorError;
-use crate::{build_bvh, build_map, Map};
+use crate::{build_bvh, build_map, PathfindMap};
 use namigator_sys::Vertex;
 
 const MAP_NAME: &str = "development";
@@ -27,7 +27,7 @@ fn test_build(temp_directory: &str, data_directory: &str) {
 }
 
 fn test_pathfind(temp_directory: &str) {
-    let mut map = Map::new(temp_directory, MAP_NAME).unwrap();
+    let mut map = PathfindMap::new(temp_directory, MAP_NAME).unwrap();
 
     const X: f32 = 16271.025391;
     const Y: f32 = 16845.421875;
