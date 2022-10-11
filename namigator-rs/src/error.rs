@@ -4,6 +4,7 @@ use std::fmt::{Display, Formatter};
 #[derive(Debug)]
 pub enum NamigatorError {
     CStringConversion(NulError),
+    PathCStringConversion,
     UnrecognizedExtension,
     NoMogpChunk,
     NoMopyChunk,
@@ -224,6 +225,9 @@ impl Display for NamigatorError {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match self {
             NamigatorError::CStringConversion(e) => e.fmt(f),
+            NamigatorError::PathCStringConversion => {
+                f.write_str("Error in converting the path to c string")
+            }
             NamigatorError::UnknownException => f.write_str("Unknown Exception"),
             NamigatorError::UnrecognizedExtension => f.write_str("Unrecognized extension"),
             NamigatorError::NoMogpChunk => f.write_str("No MOGP chunk"),

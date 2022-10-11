@@ -1,7 +1,6 @@
 use crate::error::NamigatorError;
 use crate::{build_bvh, build_map, Map};
 use namigator_sys::Vertex;
-use std::ffi::CString;
 
 const MAP_NAME: &str = "development";
 
@@ -14,7 +13,6 @@ fn test_both() {
 }
 
 fn test_build(temp_directory: &str, data_directory: &str) {
-    let map_name = CString::new(MAP_NAME).unwrap();
     let threads = 8;
 
     match build_bvh(data_directory, temp_directory, threads) {
@@ -24,7 +22,7 @@ fn test_build(temp_directory: &str, data_directory: &str) {
             _ => panic!(),
         },
     }
-    build_map(data_directory, temp_directory, &map_name, "", threads).unwrap();
+    build_map(data_directory, temp_directory, MAP_NAME, "", threads).unwrap();
     test_pathfind(temp_directory);
 }
 
