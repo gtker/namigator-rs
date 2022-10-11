@@ -92,6 +92,8 @@ pub enum NamigatorError {
     FailedToLoadAdt,
     MapDoesNotHaveAdt,
     UnknownException,
+
+    MapIsNullPointer,
 }
 
 pub(crate) fn error_code_to_error(v: u8) -> NamigatorError {
@@ -356,6 +358,7 @@ impl Display for NamigatorError {
             NamigatorError::UnknownZoneAndArea => f.write_str("Unknown zone and area"),
             NamigatorError::FailedToLoadAdt => f.write_str("Failed to load ADT"),
             NamigatorError::MapDoesNotHaveAdt => f.write_str("Map does not have ADT"),
+            NamigatorError::MapIsNullPointer => f.write_str("Map is null pointer"),
         }
     }
 }

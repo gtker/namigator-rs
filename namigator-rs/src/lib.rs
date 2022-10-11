@@ -89,6 +89,10 @@ impl Map {
             return Err(error_code_to_error(result));
         }
 
+        if map.is_null() {
+            return Err(NamigatorError::MapIsNullPointer);
+        }
+
         Ok(Self {
             map,
             path: vec![Vertex::default(); INITIAL_VEC_SIZE],
