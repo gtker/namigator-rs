@@ -52,10 +52,15 @@ fn main() {
     pathfind.compile("pathfind");
     namigator.compile("namigator");
 
-    if std::env::var("NAMIGATOR_RS_INSTALL_TESTS").is_ok() {
-        let test_dir = vendor_dir().join("test");
-        let out_dir = PathBuf::from(std::env::var_os("OUT_DIR").unwrap());
-        std::fs::copy(test_dir.join("test_map.mpq"), out_dir.join("test_map.mpq")).unwrap();
+    let test_dir = vendor_dir().join("test");
+    let out_dir = PathBuf::from(std::env::var_os("OUT_DIR").unwrap());
+
+    const TEST_FILE_NAME: &str = "test_map.mpq";
+    let test_file = test_dir.join(TEST_FILE_NAME);
+    let out_test_file = out_dir.join(TEST_FILE_NAME);
+
+    if test_file.exists() {
+        std::fs::copy(test_file, out_test_file).unwrap();
     }
 }
 
