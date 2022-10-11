@@ -124,7 +124,7 @@ impl PathfindMap {
                 stop.x,
                 stop.y,
                 stop.z,
-                self.path.as_ptr(),
+                self.path.as_mut_ptr(),
                 self.path.len() as c_uint,
                 &mut amount_of_vertices as *const c_uint,
             )
@@ -147,7 +147,7 @@ impl PathfindMap {
                     stop.x,
                     stop.y,
                     stop.z,
-                    self.path.as_ptr(),
+                    self.path.as_mut_ptr(),
                     self.path.len() as c_uint,
                     &mut amount_of_vertices as *const c_uint,
                 )
@@ -171,7 +171,7 @@ impl PathfindMap {
                 self.map,
                 x,
                 y,
-                self.height.as_ptr(),
+                self.height.as_mut_ptr(),
                 self.height.len() as c_uint,
                 &mut amount_of_heights as *const c_uint,
             )
@@ -188,7 +188,7 @@ impl PathfindMap {
                     self.map,
                     x,
                     y,
-                    self.height.as_ptr(),
+                    self.height.as_mut_ptr(),
                     self.height.len() as c_uint,
                     &mut amount_of_heights as *const c_uint,
                 )
