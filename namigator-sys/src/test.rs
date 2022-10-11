@@ -1,9 +1,10 @@
 use crate::{
-    mapbuild_build_map, pathfind_find_heights, pathfind_find_path, pathfind_free_map,
-    pathfind_get_zone_and_area, pathfind_load_adt_at, pathfind_load_all_adts, pathfind_new_map,
-    Vertex, SUCCESS,
+    mapbuild_build_bvh, mapbuild_build_map, pathfind_find_heights, pathfind_find_path,
+    pathfind_free_map, pathfind_get_zone_and_area, pathfind_load_adt_at, pathfind_load_all_adts,
+    pathfind_new_map, Vertex, FAILED_TO_OPEN_DBC, SUCCESS,
 };
 use alloc::ffi::CString;
+use core::ffi::c_uint;
 
 const MAP_NAME: &str = "development";
 
@@ -13,6 +14,18 @@ fn test_build(temp_directory: &str, data_directory: &str) {
     let map_name = CString::new(MAP_NAME).unwrap();
     let go_csv = CString::new("").unwrap();
     let threads = 8;
+    let mut amount_of_bvhs_built: u32 = 0;
+
+    // DBC is not inside MPQ
+    let result = unsafe {
+        mapbuild_build_bvh(
+            data_path.as_ptr(),
+            output_path.as_ptr(),
+            8,
+            &mut amount_of_bvhs_built as *const c_uint,
+        )
+    };
+    assert_eq!(result, FAILED_TO_OPEN_DBC);
 
     let result = unsafe {
         mapbuild_build_map(
