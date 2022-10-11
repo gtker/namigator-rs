@@ -187,6 +187,28 @@ extern "C" {
         amount_of_heights: *const c_uint,
     ) -> c_uchar;
 
+    pub fn pathfind_find_height(
+        map: *const Map,
+        start_x: c_float,
+        start_y: c_float,
+        start_z: c_float,
+        stop_x: c_float,
+        stop_y: c_float,
+        out_stop_z: *const c_float,
+    ) -> c_uchar;
+
+    pub fn pathfind_line_of_sight(
+        map: *const Map,
+        start_x: c_float,
+        start_y: c_float,
+        start_z: c_float,
+        stop_x: c_float,
+        stop_y: c_float,
+        stop_z: c_float,
+        line_of_sight: *const u8,
+        doodads: u8,
+    ) -> c_uchar;
+
     pub fn mapbuild_build_bvh(
         data_path: *const c_char,
         output_path: *const c_char,

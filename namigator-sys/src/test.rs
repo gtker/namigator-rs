@@ -1,10 +1,11 @@
 use crate::{
-    mapbuild_build_bvh, mapbuild_build_map, pathfind_find_heights, pathfind_find_path,
-    pathfind_free_map, pathfind_get_zone_and_area, pathfind_load_adt_at, pathfind_load_all_adts,
-    pathfind_new_map, Vertex, FAILED_TO_OPEN_DBC, SUCCESS,
+    mapbuild_build_bvh, mapbuild_build_map, pathfind_find_height, pathfind_find_heights,
+    pathfind_find_path, pathfind_free_map, pathfind_get_zone_and_area, pathfind_line_of_sight,
+    pathfind_load_adt_at, pathfind_load_all_adts, pathfind_new_map, Map, Vertex,
+    FAILED_TO_OPEN_DBC, SUCCESS,
 };
 use alloc::ffi::CString;
-use core::ffi::c_uint;
+use core::ffi::{c_float, c_uchar, c_uint};
 
 const MAP_NAME: &str = "development";
 
@@ -153,5 +154,98 @@ fn test_pathfind(temp_directory: &str) {
     assert_eq!(zone, 22);
     assert_eq!(area, 22);
 
+    let should_fail = call_line_of_sight(
+        map,
+        Vertex {
+            x: 16268.3809,
+            y: 16812.7148,
+            z: 36.1483,
+        },
+        Vertex {
+            x: 16266.5781,
+            y: 16782.623,
+            z: 38.5035019,
+        },
+    );
+    assert!(!should_fail);
+    let should_pass = call_line_of_sight(
+        map,
+        Vertex {
+            x: 16873.2168,
+            y: 16926.9551,
+            z: 15.9072571,
+        },
+        Vertex {
+            x: 16987.4277,
+            y: 16950.0742,
+            z: 69.4590912,
+        },
+    );
+    assert!(should_pass);
+
+    let should_pass_doodad = call_line_of_sight(
+        map,
+        Vertex {
+            x: 16275.6895,
+            y: 16853.9023,
+            z: 37.8341751,
+        },
+        Vertex {
+            x: 16987.4277,
+            y: 16950.0742,
+            z: 69.4590912,
+        },
+    );
+    assert!(should_pass_doodad);
+
+    let start_x = 16232.7373;
+    let start_y = 16828.2734;
+    let start_z = 37.1330833;
+    let stop_x = 16208.6;
+    let stop_y = 16830.7;
+    let mut out_stop_z: c_float = 0.0;
+
+    let result = unsafe {
+        pathfind_find_height(
+            map,
+            start_x,
+            start_y,
+            start_z,
+            stop_x,
+            stop_y,
+            &mut out_stop_z as *const c_float,
+        )
+    };
+    assert_eq!(result, SUCCESS);
+    assert_eq!(out_stop_z, 36.86227);
+
     unsafe { pathfind_free_map(map) }
+}
+
+fn call_line_of_sight(map: *const Map, start: Vertex, end: Vertex) -> bool {
+    let mut los: u8 = 0;
+    let doodads: u8 = 0;
+    unsafe {
+        let result = pathfind_line_of_sight(
+            map,
+            start.x,
+            start.y,
+            start.z,
+            end.x,
+            end.y,
+            end.z,
+            &mut los as *const c_uchar,
+            doodads,
+        );
+
+        assert_eq!(result, SUCCESS);
+
+        if los == 1 {
+            true
+        } else if los == 0 {
+            false
+        } else {
+            panic!("invalid line of sight value")
+        }
+    }
 }

@@ -1,12 +1,13 @@
 use crate::error::{error_code_to_error, NamigatorError};
 use crate::util::path_to_cstr;
 use namigator_sys::{
-    pathfind_find_heights, pathfind_find_path, pathfind_free_map, pathfind_get_zone_and_area,
-    pathfind_load_adt_at, pathfind_load_all_adts, pathfind_new_map, Vertex, BUFFER_TOO_SMALL,
-    SUCCESS,
+    pathfind_find_height, pathfind_find_heights, pathfind_find_path, pathfind_free_map,
+    pathfind_get_zone_and_area, pathfind_line_of_sight, pathfind_load_adt_at,
+    pathfind_load_all_adts, pathfind_new_map, Vertex, BUFFER_TOO_SMALL, SUCCESS,
 };
-use std::ffi::{c_uint, CString};
+use std::ffi::{c_float, c_uint, CString};
 use std::path::Path;
+use wow_world_base::vanilla::Vector2d;
 pub use wow_world_base::vanilla::Vector3d;
 
 #[derive(Debug)]
@@ -210,6 +211,62 @@ impl PathfindMap {
         }
 
         Err(error_code_to_error(result))
+    }
+
+    pub fn line_of_sight(&self, from: Vector3d, to: Vector3d) -> Result<bool, NamigatorError> {
+        let mut los: u8 = 0;
+        // SAFETY: self.map is always valid in member functions.
+        let doodads: u8 = 0;
+        let result = unsafe {
+            pathfind_line_of_sight(
+                self.map,
+                from.x,
+                from.y,
+                from.z,
+                to.x,
+                to.y,
+                to.z,
+                &mut los as *const u8,
+                doodads,
+            )
+        };
+
+        if result == SUCCESS {
+            Ok(match los {
+                1 => true,
+                0 => false,
+                los => {
+                    panic!(
+                        "invalid value received from line_of_sight: '{}', from: '{:?}', to: '{:?}'",
+                        los, from, to
+                    )
+                }
+            })
+        } else {
+            Err(error_code_to_error(result))
+        }
+    }
+
+    pub fn find_height(&self, start: Vector3d, stop: Vector2d) -> Result<f32, NamigatorError> {
+        let mut out_stop_z: c_float = 0.0;
+
+        let result = unsafe {
+            pathfind_find_height(
+                self.map,
+                start.x,
+                start.y,
+                start.z,
+                stop.x,
+                stop.y,
+                &mut out_stop_z as *const c_float,
+            )
+        };
+
+        if result == SUCCESS {
+            Ok(out_stop_z)
+        } else {
+            Err(error_code_to_error(result))
+        }
     }
 
     fn resize_paths(&mut self, size: u32) {

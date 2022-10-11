@@ -2,6 +2,7 @@ use crate::build::{build_bvh, build_map};
 use crate::error::NamigatorError;
 use crate::pathfind::PathfindMap;
 use crate::Vector3d;
+use wow_world_base::vanilla::Vector2d;
 
 const MAP_NAME: &str = "development";
 
@@ -70,4 +71,65 @@ fn test_pathfind(temp_directory: &str) {
 
     assert_eq!(zone, 22);
     assert_eq!(area, 22);
+
+    let should_fail = map
+        .line_of_sight(
+            Vector3d {
+                x: 16268.3809,
+                y: 16812.7148,
+                z: 36.1483,
+            },
+            Vector3d {
+                x: 16266.5781,
+                y: 16782.623,
+                z: 38.5035019,
+            },
+        )
+        .unwrap();
+    assert!(!should_fail);
+
+    let should_pass = map
+        .line_of_sight(
+            Vector3d {
+                x: 16873.2168,
+                y: 16926.9551,
+                z: 15.9072571,
+            },
+            Vector3d {
+                x: 16987.4277,
+                y: 16950.0742,
+                z: 69.4590912,
+            },
+        )
+        .unwrap();
+    assert!(should_pass);
+
+    let should_pass_doodad = map
+        .line_of_sight(
+            Vector3d {
+                x: 16275.6895,
+                y: 16853.9023,
+                z: 37.8341751,
+            },
+            Vector3d {
+                x: 16987.4277,
+                y: 16950.0742,
+                z: 69.4590912,
+            },
+        )
+        .unwrap();
+    assert!(should_pass_doodad);
+
+    let start = Vector3d {
+        x: 16232.7373,
+        y: 16828.2734,
+        z: 37.1330833,
+    };
+    let stop = Vector2d {
+        x: 16208.6,
+        y: 16830.7,
+    };
+
+    let z = map.find_height(start, stop).unwrap();
+    assert_eq!(z, 36.86227);
 }
