@@ -133,7 +133,7 @@ pub const MAP_DOES_NOT_HAVE_ADT: u8 = 87;
 
 pub const UNKNOWN_EXCEPTION: u8 = 0xFF;
 
-#[link(name = "libpathfind")]
+#[link(name = "namigator")]
 extern "C" {
     pub fn pathfind_new_map(
         data_path: *const c_char,
@@ -186,7 +186,7 @@ extern "C" {
     ) -> c_uchar;
 }
 
-#[link(name = "libmapbuild")]
+#[link(name = "namigator")]
 extern "C" {
     pub fn mapbuild_build_bvh(
         data_path: *const c_char,

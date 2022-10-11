@@ -8,4 +8,4 @@ links = "namigator"
 exclude = ["vendor/namigator/test", ".git"]
 
 [build-dependencies]
-cmake = "0.1"
+cc = {version = "1.0.73", features = ["parallel"]}

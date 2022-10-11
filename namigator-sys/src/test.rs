@@ -29,7 +29,7 @@ fn test_build(temp_directory: &str, data_directory: &str) {
 #[test]
 fn test_both() {
     let temp_directory = concat!(env!("OUT_DIR"), "/test_tmp");
-    let data_directory = concat!(env!("OUT_DIR"), "/test");
+    let data_directory = env!("OUT_DIR");
 
     test_build(temp_directory, data_directory);
     test_pathfind(temp_directory);
