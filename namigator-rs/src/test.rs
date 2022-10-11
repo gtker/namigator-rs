@@ -37,8 +37,8 @@ fn test_pathfind(temp_directory: &str) {
 
     let heights = map.find_heights(X, Y).unwrap();
     assert_eq!(heights.len(), 2);
-    assert_eq!(heights[0], 35.611702);
-    assert_eq!(heights[1], 46.301323);
+    assert_eq!(heights[0], 46.30131);
+    assert_eq!(heights[1], 35.611702);
 
     map.load_all_adts().unwrap();
 

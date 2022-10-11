@@ -94,8 +94,8 @@ fn test_pathfind(temp_directory: &str) {
     };
 
     assert_eq!(result, SUCCESS);
-    assert_eq!(buf[0], 35.611702);
-    assert_eq!(buf[1], 46.301323);
+    assert_eq!(buf[0], 46.30131);
+    assert_eq!(buf[1], 35.611702);
     assert_eq!(amount_of_vertices, 2);
 
     let mut amount_of_adts_loaded: u32 = 0;
