@@ -1,5 +1,6 @@
+use crate::build::{build_bvh, build_map};
 use crate::error::NamigatorError;
-use crate::{build_bvh, build_map, PathfindMap};
+use crate::pathfind::PathfindMap;
 use namigator_sys::Vertex;
 
 const MAP_NAME: &str = "development";
