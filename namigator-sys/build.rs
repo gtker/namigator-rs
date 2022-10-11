@@ -81,7 +81,6 @@ fn cpp_includes() -> Vec<PathBuf> {
         vendor_dir().join("recastnavigation/DetourCrowd/Include"),
         vendor_dir().join("recastnavigation/DetourTileCache/Include"),
         vendor_dir().join("recastnavigation/Recast/Include"),
-        vendor_dir().join("recastnavigation/DebugUtils/Include"),
     ]
 }
 
@@ -140,10 +139,6 @@ fn cpp_files() -> Vec<PathBuf> {
         vendor_dir().join("parser/Wmo/Wmo.cpp"),
         vendor_dir().join("parser/Wmo/WmoDoodad.cpp"),
         vendor_dir().join("parser/Wmo/WmoInstance.cpp"),
-        vendor_dir().join("recastnavigation/DebugUtils/Source/DebugDraw.cpp"),
-        vendor_dir().join("recastnavigation/DebugUtils/Source/DetourDebugDraw.cpp"),
-        vendor_dir().join("recastnavigation/DebugUtils/Source/RecastDebugDraw.cpp"),
-        vendor_dir().join("recastnavigation/DebugUtils/Source/RecastDump.cpp"),
         vendor_dir().join("recastnavigation/Detour/Source/DetourAlloc.cpp"),
         vendor_dir().join("recastnavigation/Detour/Source/DetourAssert.cpp"),
         vendor_dir().join("recastnavigation/Detour/Source/DetourCommon.cpp"),
