@@ -6,7 +6,9 @@ pub use build::*;
 mod pathfind;
 pub use pathfind::*;
 
-pub mod error;
+mod error;
+pub use error::*;
+
 mod util;
 
 #[cfg(test)]
