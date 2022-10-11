@@ -5,7 +5,47 @@ edition = "2021"
 
 links = "namigator"
 
-exclude = ["vendor/namigator/test", ".git"]
+exclude = ["vendor/test",
+           "vendor/.clang-format",
+           ".github",
+           ".gitignore",
+           ".gitmodules",
+           "CMakeLists.txt",
+           "vendor/MapViewer/",
+           "python.cpp",
+
+           ".editorconfig",
+           ".travis.yml",
+           "CONTRIBUTING.md",
+           "Doxyfile",
+           "appveyor.yml",
+
+           "vendor/recastnavigation/Docs/",
+           "vendor/recastnavigation/RecastDemo/",
+           "vendor/recastnavigation/DebugUtils/",
+           "vendor/recastnavigation/Tests/",
+
+           "vendor/stormlib/storm_dll/",
+           "vendor/stormlib/doc/",
+
+           "vendor/stormlib/Info.plist",
+           "vendor/stormlib/Premake5.lua",
+           "vendor/stormlib/Publish.bat",
+           "vendor/stormlib/*.sln",
+           "vendor/stormlib/*.vcproj",
+           "vendor/stormlib/*.vcxproj",
+           "vendor/stormlib/*.vcxproj.filters",
+           "vendor/stormlib/*.kdev4",
+           "vendor/stormlib/StormLib.xcodeproj/",
+           "vendor/stormlib/sources",
+
+           "vendor/stormlib/src/DllMain.*",
+           "vendor/stormlib/make-msvc.bat",
+           "vendor/stormlib/make.bat",
+
+           "vendor/stormlib/src/wdk/",
+           "vendor/stormlib/test/",
+]
 
 [build-dependencies]
 cc = {version = "1.0.73", features = ["parallel"]}
