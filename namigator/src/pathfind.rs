@@ -1,10 +1,12 @@
 use crate::error::{error_code_to_error, NamigatorError};
+use crate::util::path_to_cstr;
 use namigator_sys::{
     pathfind_find_heights, pathfind_find_path, pathfind_free_map, pathfind_get_zone_and_area,
     pathfind_load_adt_at, pathfind_load_all_adts, pathfind_new_map, Vertex, BUFFER_TOO_SMALL,
     SUCCESS,
 };
 use std::ffi::{c_uint, CString};
+use std::path::Path;
 
 #[derive(Debug)]
 pub struct PathfindMap {
@@ -16,33 +18,36 @@ pub struct PathfindMap {
 const INITIAL_VEC_SIZE: usize = 10;
 
 impl PathfindMap {
-    pub fn new(data_path: &str, map_name: &str) -> Result<Self, NamigatorError> {
-        let data_path = CString::new(data_path)?;
-        let map_name = CString::new(map_name)?;
+    pub fn new(data_path: impl AsRef<Path>, map_name: &str) -> Result<Self, NamigatorError> {
+        fn inner(data_path: &Path, map_name: &str) -> Result<PathfindMap, NamigatorError> {
+            let data_path = path_to_cstr(data_path)?;
+            let map_name = CString::new(map_name)?;
 
-        let mut result: u8 = 0;
-        // SAFETY: CStrings are guaranteed to be valid pointers
-        let map = unsafe {
-            pathfind_new_map(
-                data_path.as_ptr(),
-                map_name.as_ptr(),
-                &mut result as *const u8,
-            )
-        };
+            let mut result: u8 = 0;
+            // SAFETY: CStrings are guaranteed to be valid pointers
+            let map = unsafe {
+                pathfind_new_map(
+                    data_path.as_ptr(),
+                    map_name.as_ptr(),
+                    &mut result as *const u8,
+                )
+            };
 
-        if result != SUCCESS {
-            return Err(error_code_to_error(result));
+            if result != SUCCESS {
+                return Err(error_code_to_error(result));
+            }
+
+            if map.is_null() {
+                return Err(NamigatorError::MapIsNullPointer);
+            }
+
+            Ok(PathfindMap {
+                map,
+                path: vec![Vertex::default(); INITIAL_VEC_SIZE],
+                height: vec![f32::default(); INITIAL_VEC_SIZE],
+            })
         }
-
-        if map.is_null() {
-            return Err(NamigatorError::MapIsNullPointer);
-        }
-
-        Ok(Self {
-            map,
-            path: vec![Vertex::default(); INITIAL_VEC_SIZE],
-            height: vec![f32::default(); INITIAL_VEC_SIZE],
-        })
+        inner(data_path.as_ref(), map_name)
     }
 
     pub fn load_all_adts(&mut self) -> Result<u32, NamigatorError> {
