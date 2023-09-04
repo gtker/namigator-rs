@@ -1,6 +1,9 @@
 use crate::error::{error_code_to_error, NamigatorError};
 use crate::util::path_to_cstr;
-use namigator_sys::{mapbuild_build_bvh, mapbuild_build_map, SUCCESS};
+use namigator_sys::{
+    mapbuild_build_bvh, mapbuild_build_map, mapbuild_bvh_files_exist, mapbuild_map_files_exist,
+    SUCCESS,
+};
 use std::ffi::{c_uint, CString};
 use std::path::Path;
 
@@ -96,4 +99,45 @@ pub fn build_map(
         gameobject_csv.as_ref(),
         threads,
     )
+}
+
+pub fn map_files_exist(
+    output_path: impl AsRef<Path>,
+    map_name: &str,
+) -> Result<bool, NamigatorError> {
+    fn inner(output_path: &Path, map_name: &str) -> Result<bool, NamigatorError> {
+        let output_path = path_to_cstr(output_path)?;
+        let map_name = CString::new(map_name)?;
+        let mut exists: u8 = 0;
+        let result = unsafe {
+            mapbuild_map_files_exist(
+                output_path.as_ptr(),
+                map_name.as_ptr(),
+                &mut exists as *const u8,
+            )
+        };
+
+        if result == SUCCESS {
+            Ok(exists != 0)
+        } else {
+            Err(error_code_to_error(result))
+        }
+    }
+    inner(output_path.as_ref(), map_name)
+}
+
+pub fn bvh_files_exist(output_path: impl AsRef<Path>) -> Result<bool, NamigatorError> {
+    fn inner(output_path: &Path) -> Result<bool, NamigatorError> {
+        let output_path = path_to_cstr(output_path)?;
+        let mut exists: u8 = 0;
+        let result =
+            unsafe { mapbuild_bvh_files_exist(output_path.as_ptr(), &mut exists as *const u8) };
+
+        if result == SUCCESS {
+            Ok(exists != 0)
+        } else {
+            Err(error_code_to_error(result))
+        }
+    }
+    inner(output_path.as_ref())
 }

@@ -1,21 +1,25 @@
 use crate::{
-    mapbuild_build_bvh, mapbuild_build_map, pathfind_find_height, pathfind_find_heights,
-    pathfind_find_path, pathfind_free_map, pathfind_get_zone_and_area, pathfind_line_of_sight,
-    pathfind_load_adt_at, pathfind_load_all_adts, pathfind_new_map, Map, Vertex,
-    FAILED_TO_OPEN_DBC, SUCCESS,
+    mapbuild_build_bvh, mapbuild_build_map, mapbuild_bvh_files_exist, mapbuild_map_files_exist,
+    pathfind_find_height, pathfind_find_heights, pathfind_find_path, pathfind_free_map,
+    pathfind_get_zone_and_area, pathfind_line_of_sight, pathfind_load_adt_at,
+    pathfind_load_all_adts, pathfind_new_map, Map, Vertex, FAILED_TO_OPEN_DBC, SUCCESS,
 };
-use alloc::ffi::CString;
 use core::ffi::{c_float, c_uchar, c_uint};
+use std::ffi::CString;
+use std::path::Path;
 
 const MAP_NAME: &str = "development";
 
-fn test_build(temp_directory: &str, data_directory: &str) {
+fn test_build(output_path: &str, data_directory: &str) {
     let data_path = CString::new(data_directory).unwrap();
-    let output_path = CString::new(temp_directory).unwrap();
+    let output_path = CString::new(output_path).unwrap();
     let map_name = CString::new(MAP_NAME).unwrap();
     let go_csv = CString::new("").unwrap();
     let threads = 8;
     let mut amount_of_bvhs_built: u32 = 0;
+
+    let (a, b) = call_exists(&output_path, &map_name);
+    assert!(!a && !b);
 
     // DBC is not inside MPQ
     let result = unsafe {
@@ -38,19 +42,27 @@ fn test_build(temp_directory: &str, data_directory: &str) {
         )
     };
     assert_eq!(result, SUCCESS);
+
+    let (a, b) = call_exists(&output_path, &map_name);
+    assert!(a && b);
 }
 
 #[test]
 fn test_both() {
-    let temp_directory = concat!(env!("OUT_DIR"), "/test_tmp");
+    let output_path = concat!(env!("OUT_DIR"), "/test_tmp");
     let data_directory = env!("OUT_DIR");
 
-    test_build(temp_directory, data_directory);
-    test_pathfind(temp_directory);
+    let output = Path::new(output_path);
+    if output.exists() {
+        std::fs::remove_dir_all(output_path).unwrap();
+    }
+
+    test_build(output_path, data_directory);
+    test_pathfind(output_path);
 }
 
-fn test_pathfind(temp_directory: &str) {
-    let data_path = CString::new(temp_directory).unwrap();
+fn test_pathfind(output_path: &str) {
+    let data_path = CString::new(output_path).unwrap();
     let map_name = CString::new(MAP_NAME).unwrap();
     let mut result: u8 = 0;
     let map = unsafe {
@@ -248,4 +260,28 @@ fn call_line_of_sight(map: *const Map, start: Vertex, end: Vertex) -> bool {
             panic!("invalid line of sight value")
         }
     }
+}
+
+fn call_exists(output_path: &CString, map_name: &CString) -> (bool, bool) {
+    let mut bvh_exists: u8 = 0xFF;
+    let success =
+        unsafe { mapbuild_bvh_files_exist(output_path.as_ptr(), &mut bvh_exists as *const u8) };
+    assert_eq!(success, SUCCESS);
+
+    let mut map_exists: u8 = 0xFF;
+    let success = unsafe {
+        mapbuild_map_files_exist(
+            output_path.as_ptr(),
+            map_name.as_ptr(),
+            &mut map_exists as *const u8,
+        )
+    };
+    assert_eq!(success, SUCCESS);
+
+    let is_bool = |v| v == 0 || v == 1;
+
+    assert!(is_bool(bvh_exists));
+    assert!(is_bool(map_exists));
+
+    (bvh_exists == 1, map_exists == 1)
 }
