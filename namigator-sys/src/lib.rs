@@ -1,8 +1,3 @@
-#![no_std]
-
-#[cfg(test)]
-extern crate alloc; // Necessary for CStrings
-
 #[cfg(test)]
 mod test;
 
@@ -222,5 +217,13 @@ extern "C" {
         map_name: *const c_char,
         gameobject_csv: *const c_char,
         threads: c_uint,
+    ) -> c_uchar;
+
+    pub fn mapbuild_bvh_files_exist(output_path: *const c_char, exists: *const u8) -> c_uchar;
+
+    pub fn mapbuild_map_files_exist(
+        output_path: *const c_char,
+        map_name: *const c_char,
+        exists: *const u8,
     ) -> c_uchar;
 }

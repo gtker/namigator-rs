@@ -112,6 +112,7 @@ fn cpp_files() -> Vec<PathBuf> {
     vec![
         vendor_dir().join("MapBuilder/BVHConstructor.cpp"),
         vendor_dir().join("MapBuilder/GameObjectBVHBuilder.cpp"),
+        vendor_dir().join("MapBuilder/FileExist.cpp"),
         vendor_dir().join("MapBuilder/MapBuilder_c_bindings.cpp"),
         vendor_dir().join("MapBuilder/MeshBuilder.cpp"),
         vendor_dir().join("MapBuilder/RecastContext.cpp"),

@@ -1,35 +1,46 @@
 use crate::build::{build_bvh, build_map};
 use crate::error::NamigatorError;
 use crate::pathfind::PathfindMap;
-use crate::{Vector2d, Vector3d};
+use crate::{bvh_files_exist, map_files_exist, Vector2d, Vector3d};
 use std::path::Path;
 
 const MAP_NAME: &str = "development";
 
 #[test]
 fn test_both() {
-    let temp_directory = "/tmp/namirstest";
+    let output_directory = "/tmp/namirstest";
     let data_directory = "/tmp/test";
 
-    test_build(&temp_directory, &data_directory);
+    let output = Path::new(output_directory);
+    if output.exists() {
+        std::fs::remove_dir_all(output_directory).unwrap();
+    }
+
+    test_build(&output_directory, &data_directory);
 }
 
-fn test_build(temp_directory: &str, data_directory: &str) {
+fn test_build(output_directory: &str, data_directory: &str) {
     let threads = 8;
 
-    match build_bvh(data_directory, temp_directory, threads) {
+    assert!(!bvh_files_exist(output_directory).unwrap());
+    assert!(!map_files_exist(output_directory, MAP_NAME).unwrap());
+
+    match build_bvh(data_directory, output_directory, threads) {
         Ok(_) => {}
         Err(e) => match e {
             NamigatorError::FailedToOpenDbc => {} // Default test file does not include DBC
-            _ => panic!(),
+            e => panic!("{}", e),
         },
     }
-    build_map(data_directory, temp_directory, MAP_NAME, "", threads).unwrap();
-    test_pathfind(temp_directory);
+    build_map(data_directory, output_directory, MAP_NAME, "", threads).unwrap();
+    test_pathfind(output_directory);
+
+    assert!(bvh_files_exist(output_directory).unwrap());
+    assert!(map_files_exist(output_directory, MAP_NAME).unwrap());
 }
 
-fn test_pathfind(temp_directory: &str) {
-    let mut map = PathfindMap::new(temp_directory, MAP_NAME).unwrap();
+fn test_pathfind(output_directory: &str) {
+    let mut map = PathfindMap::new(output_directory, MAP_NAME).unwrap();
 
     const X: f32 = 16271.025391;
     const Y: f32 = 16845.421875;
