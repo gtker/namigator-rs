@@ -20,6 +20,9 @@
 //! # }
 //! ```
 //!
+#![cfg_attr(docsrs, feature(doc_auto_cfg))]
+#![cfg_attr(docsrs, feature(doc_cfg))]
+
 extern crate namigator_sys;
 
 mod build;
@@ -32,6 +35,30 @@ mod error;
 pub use error::*;
 
 mod util;
+
+#[cfg(feature = "vanilla")]
+util::specific_pathfind!(
+    wow_world_base::vanilla::Map,
+    VanillaMap,
+    wow_world_base::vanilla::Area,
+    wow_world_base::vanilla::Area
+);
+
+#[cfg(feature = "tbc")]
+util::specific_pathfind!(
+    wow_world_base::tbc::Map,
+    TbcMap,
+    wow_world_base::tbc::Area,
+    wow_world_base::tbc::Area
+);
+
+#[cfg(feature = "wrath")]
+util::specific_pathfind!(
+    wow_world_base::wrath::Map,
+    WrathMap,
+    wow_world_base::wrath::Area,
+    wow_world_base::wrath::Area
+);
 
 #[cfg(test)]
 mod test;

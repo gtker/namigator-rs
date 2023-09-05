@@ -3,6 +3,15 @@ name = "namigator"
 version = "0.1.0"
 edition = "2021"
 
+[features]
+vanilla = ["wow_world_base/vanilla", "wow_world_base/extended"]
+tbc = ["wow_world_base/tbc", "wow_world_base/extended"]
+wrath = ["wow_world_base/wrath", "wow_world_base/extended"]
+
 [dependencies]
 namigator-sys = {path = "../namigator-sys"}
 wow_world_base = {path = "../../wow_messages/wow_world_base", features = ["shared"] }
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
