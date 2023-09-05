@@ -128,6 +128,8 @@ pub const UNKNOWN_ZONE_AND_AREA: u8 = 85;
 pub const FAILED_TO_LOAD_ADT: u8 = 86;
 pub const MAP_DOES_NOT_HAVE_ADT: u8 = 87;
 
+pub const UNABLE_TO_FIND_RANDOM_POINT_IN_CIRCLE: u8 = 88;
+
 pub const UNKNOWN_EXCEPTION: u8 = 0xFF;
 
 #[link(name = "namigator")]
@@ -202,6 +204,17 @@ extern "C" {
         stop_z: c_float,
         line_of_sight: *const u8,
         doodads: u8,
+    ) -> c_uchar;
+
+    pub fn pathfind_find_random_point_around_circle(
+        map: *const Map,
+        x: c_float,
+        y: c_float,
+        z: c_float,
+        radius: c_float,
+        out_random_x: *const c_float,
+        out_random_y: *const c_float,
+        out_random_z: *const c_float,
     ) -> c_uchar;
 
     pub fn mapbuild_build_bvh(

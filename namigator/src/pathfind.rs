@@ -1,9 +1,10 @@
 use crate::error::{error_code_to_error, NamigatorError};
 use crate::util::path_to_cstr;
 use namigator_sys::{
-    pathfind_find_height, pathfind_find_heights, pathfind_find_path, pathfind_free_map,
-    pathfind_get_zone_and_area, pathfind_line_of_sight, pathfind_load_adt_at,
-    pathfind_load_all_adts, pathfind_new_map, Vertex, BUFFER_TOO_SMALL, SUCCESS,
+    pathfind_find_height, pathfind_find_heights, pathfind_find_path,
+    pathfind_find_random_point_around_circle, pathfind_free_map, pathfind_get_zone_and_area,
+    pathfind_line_of_sight, pathfind_load_adt_at, pathfind_load_all_adts, pathfind_new_map, Vertex,
+    BUFFER_TOO_SMALL, SUCCESS,
 };
 use std::ffi::{c_float, c_uint, CString};
 use std::path::Path;
@@ -265,6 +266,39 @@ impl PathfindMap {
 
         if result == SUCCESS {
             Ok(out_stop_z)
+        } else {
+            Err(error_code_to_error(result))
+        }
+    }
+
+    pub fn find_random_point_around_circle(
+        &self,
+        start: Vector3d,
+        radius: f32,
+    ) -> Result<Vector3d, NamigatorError> {
+        let mut out_x: c_float = 0.0;
+        let mut out_y: c_float = 0.0;
+        let mut out_z: c_float = 0.0;
+
+        let result = unsafe {
+            pathfind_find_random_point_around_circle(
+                self.map,
+                start.x,
+                start.y,
+                start.z,
+                radius,
+                &mut out_x as *const c_float,
+                &mut out_y as *const c_float,
+                &mut out_z as *const c_float,
+            )
+        };
+
+        if result == SUCCESS {
+            Ok(Vector3d {
+                x: out_x,
+                y: out_y,
+                z: out_z,
+            })
         } else {
             Err(error_code_to_error(result))
         }

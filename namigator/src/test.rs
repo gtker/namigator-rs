@@ -143,4 +143,22 @@ fn test_pathfind(output_directory: &str) {
 
     let z = map.find_height(start, stop).unwrap();
     assert_eq!(z, 36.86227);
+
+    const POINT: Vector3d = Vector3d {
+        x: 16303.294922,
+        y: 16789.242188,
+        z: 45.219631,
+    };
+    const POINT_DISTANCE: f32 = 10.0;
+    let out = map
+        .find_random_point_around_circle(POINT, POINT_DISTANCE)
+        .unwrap();
+
+    let x = (out.x - POINT.x).powi(2);
+    let y = (out.y - POINT.y).powi(2);
+    let z = (out.z - POINT.z).powi(2);
+
+    let distance = (x + y + z).sqrt();
+
+    assert!(distance < POINT_DISTANCE);
 }

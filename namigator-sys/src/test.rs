@@ -1,8 +1,9 @@
 use crate::{
     mapbuild_build_bvh, mapbuild_build_map, mapbuild_bvh_files_exist, mapbuild_map_files_exist,
-    pathfind_find_height, pathfind_find_heights, pathfind_find_path, pathfind_free_map,
-    pathfind_get_zone_and_area, pathfind_line_of_sight, pathfind_load_adt_at,
-    pathfind_load_all_adts, pathfind_new_map, Map, Vertex, FAILED_TO_OPEN_DBC, SUCCESS,
+    pathfind_find_height, pathfind_find_heights, pathfind_find_path,
+    pathfind_find_random_point_around_circle, pathfind_free_map, pathfind_get_zone_and_area,
+    pathfind_line_of_sight, pathfind_load_adt_at, pathfind_load_all_adts, pathfind_new_map, Map,
+    Vertex, FAILED_TO_OPEN_DBC, SUCCESS,
 };
 use core::ffi::{c_float, c_uchar, c_uint};
 use std::ffi::CString;
@@ -230,6 +231,35 @@ fn test_pathfind(output_path: &str) {
     };
     assert_eq!(result, SUCCESS);
     assert_eq!(out_stop_z, 36.86227);
+
+    let mut out_x = 0.0;
+    let mut out_y = 0.0;
+    let mut out_z = 0.0;
+    const POINT_X: c_float = 16303.294922;
+    const POINT_Y: c_float = 16789.242188;
+    const POINT_Z: c_float = 45.219631;
+    const POINT_DISTANCE: c_float = 10.0;
+    let result = unsafe {
+        pathfind_find_random_point_around_circle(
+            map,
+            POINT_X,
+            POINT_Y,
+            POINT_Z,
+            POINT_DISTANCE,
+            &mut out_x as *const c_float,
+            &mut out_y as *const c_float,
+            &mut out_z as *const c_float,
+        )
+    };
+    assert_eq!(result, SUCCESS);
+
+    let x = (out_x - POINT_X).powi(2);
+    let y = (out_y - POINT_Y).powi(2);
+    let z = (out_z - POINT_Z).powi(2);
+
+    let distance = (x + y + z).sqrt();
+
+    assert!(distance < POINT_DISTANCE);
 
     unsafe { pathfind_free_map(map) }
 }

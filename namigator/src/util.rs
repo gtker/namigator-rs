@@ -90,6 +90,14 @@ macro_rules! specific_pathfind {
             ) -> Result<bool, $crate::error::NamigatorError> {
                 self.map.line_of_sight(from, to)
             }
+
+            pub fn find_random_point_around_circle(
+                &self,
+                start: $crate::Vector3d,
+                radius: f32,
+            ) -> Result<$crate::Vector3d, NamigatorError> {
+                self.map.find_random_point_around_circle(start, radius)
+            }
         }
     };
 }
