@@ -45,7 +45,11 @@ fn test_pathfind(output_directory: &str) {
     const X: f32 = 16271.025391;
     const Y: f32 = 16845.421875;
 
+    assert!(!map.adt_loaded(0, 1).unwrap());
     map.load_adt(0, 1).unwrap();
+    assert!(map.adt_loaded(0, 1).unwrap());
+    map.unload_adt(0, 1).unwrap();
+    assert!(!map.adt_loaded(0, 1).unwrap());
 
     map.load_adt_at(X, Y).unwrap();
 

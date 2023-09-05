@@ -161,6 +161,15 @@ extern "C" {
         out_adt_y: *const c_float,
     ) -> c_uchar;
 
+    pub fn pathfind_unload_adt(map: *const Map, x: c_int, y: c_int) -> c_uchar;
+
+    pub fn pathfind_is_adt_loaded(
+        map: *const Map,
+        x: c_int,
+        y: c_int,
+        out_loaded: *const u8,
+    ) -> c_uchar;
+
     pub fn pathfind_get_zone_and_area(
         map: *const Map,
         x: c_float,

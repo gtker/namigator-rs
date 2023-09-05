@@ -56,6 +56,18 @@ macro_rules! specific_pathfind {
                 self.map.load_adt_at(x, y)
             }
 
+            pub fn unload_adt(&self, x: i32, y: i32) -> Result<(), $crate::error::NamigatorError> {
+                self.map.unload_adt(x, y)
+            }
+
+            pub fn adt_loaded(
+                &self,
+                x: i32,
+                y: i32,
+            ) -> Result<bool, $crate::error::NamigatorError> {
+                self.map.adt_loaded(x, y)
+            }
+
             pub fn get_zone_and_area(
                 &self,
                 x: f32,

@@ -2,8 +2,9 @@ use crate::{
     mapbuild_build_bvh, mapbuild_build_map, mapbuild_bvh_files_exist, mapbuild_map_files_exist,
     pathfind_find_height, pathfind_find_heights, pathfind_find_path,
     pathfind_find_random_point_around_circle, pathfind_free_map, pathfind_get_zone_and_area,
-    pathfind_line_of_sight, pathfind_load_adt, pathfind_load_adt_at, pathfind_load_all_adts,
-    pathfind_new_map, Map, Vertex, FAILED_TO_OPEN_DBC, SUCCESS,
+    pathfind_is_adt_loaded, pathfind_line_of_sight, pathfind_load_adt, pathfind_load_adt_at,
+    pathfind_load_all_adts, pathfind_new_map, pathfind_unload_adt, Map, Vertex, FAILED_TO_OPEN_DBC,
+    SUCCESS,
 };
 use core::ffi::{c_float, c_uchar, c_uint};
 use std::ffi::CString;
@@ -76,27 +77,44 @@ fn test_pathfind(output_path: &str) {
     assert!(!map.is_null());
     assert_eq!(result, SUCCESS);
 
-    const X: f32 = 16271.025391;
-    const Y: f32 = 16845.421875;
+    let mut loaded: u8 = 0xFF;
+
+    let result = unsafe { pathfind_is_adt_loaded(map, 0, 1, &mut loaded as *const u8) };
+    assert_eq!(result, SUCCESS);
+    assert_eq!(loaded, 0);
 
     let mut adt_x: f32 = 0.0;
     let mut adt_y: f32 = 0.0;
     let result = unsafe {
-        pathfind_load_adt_at(
+        pathfind_load_adt(
             map,
-            X,
-            Y,
+            0,
+            1,
             &mut adt_x as *const f32,
             &mut adt_y as *const f32,
         )
     };
     assert_eq!(result, SUCCESS);
 
+    let result = unsafe { pathfind_is_adt_loaded(map, 0, 1, &mut loaded as *const u8) };
+    assert_eq!(result, SUCCESS);
+    assert_eq!(loaded, 1);
+
+    let result = unsafe { pathfind_unload_adt(map, 0, 1) };
+    assert_eq!(result, SUCCESS);
+
+    let result = unsafe { pathfind_is_adt_loaded(map, 0, 1, &mut loaded as *const u8) };
+    assert_eq!(result, SUCCESS);
+    assert_eq!(loaded, 0);
+
+    const X: f32 = 16271.025391;
+    const Y: f32 = 16845.421875;
+
     let result = unsafe {
-        pathfind_load_adt(
+        pathfind_load_adt_at(
             map,
-            0,
-            1,
+            X,
+            Y,
             &mut adt_x as *const f32,
             &mut adt_y as *const f32,
         )
