@@ -5,4 +5,4 @@ edition = "2021"
 
 [dependencies]
 namigator-sys = {path = "../namigator-sys"}
-wow_world_base = {path = "../../wow_messages/wow_world_base", features = ["vanilla"] }
+wow_world_base = {path = "../../wow_messages/wow_world_base", features = ["shared"] }

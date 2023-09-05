@@ -1,8 +1,8 @@
 use crate::build::{build_bvh, build_map};
 use crate::error::NamigatorError;
 use crate::pathfind::PathfindMap;
-use crate::Vector3d;
-use wow_world_base::vanilla::Vector2d;
+use crate::{Vector2d, Vector3d};
+use std::path::Path;
 
 const MAP_NAME: &str = "development";
 

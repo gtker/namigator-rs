@@ -7,8 +7,9 @@ use namigator_sys::{
 };
 use std::ffi::{c_float, c_uint, CString};
 use std::path::Path;
-use wow_world_base::vanilla::Vector2d;
-pub use wow_world_base::vanilla::Vector3d;
+
+pub use wow_world_base::shared::vector2d_vanilla_tbc_wrath::Vector2d;
+pub use wow_world_base::shared::vector3d_vanilla_tbc_wrath::Vector3d;
 
 #[derive(Debug)]
 pub struct PathfindMap {
