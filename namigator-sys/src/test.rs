@@ -2,8 +2,8 @@ use crate::{
     mapbuild_build_bvh, mapbuild_build_map, mapbuild_bvh_files_exist, mapbuild_map_files_exist,
     pathfind_find_height, pathfind_find_heights, pathfind_find_path,
     pathfind_find_random_point_around_circle, pathfind_free_map, pathfind_get_zone_and_area,
-    pathfind_line_of_sight, pathfind_load_adt_at, pathfind_load_all_adts, pathfind_new_map, Map,
-    Vertex, FAILED_TO_OPEN_DBC, SUCCESS,
+    pathfind_line_of_sight, pathfind_load_adt, pathfind_load_adt_at, pathfind_load_all_adts,
+    pathfind_new_map, Map, Vertex, FAILED_TO_OPEN_DBC, SUCCESS,
 };
 use core::ffi::{c_float, c_uchar, c_uint};
 use std::ffi::CString;
@@ -86,6 +86,17 @@ fn test_pathfind(output_path: &str) {
             map,
             X,
             Y,
+            &mut adt_x as *const f32,
+            &mut adt_y as *const f32,
+        )
+    };
+    assert_eq!(result, SUCCESS);
+
+    let result = unsafe {
+        pathfind_load_adt(
+            map,
+            0,
+            1,
             &mut adt_x as *const f32,
             &mut adt_y as *const f32,
         )

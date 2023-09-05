@@ -40,6 +40,14 @@ macro_rules! specific_pathfind {
                 self.map.load_all_adts()
             }
 
+            pub fn load_adt(
+                &mut self,
+                x: i32,
+                y: i32,
+            ) -> Result<(f32, f32), $crate::error::NamigatorError> {
+                self.map.load_adt(x, y)
+            }
+
             pub fn load_adt_at(
                 &mut self,
                 x: f32,

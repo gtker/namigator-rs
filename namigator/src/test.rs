@@ -45,6 +45,8 @@ fn test_pathfind(output_directory: &str) {
     const X: f32 = 16271.025391;
     const Y: f32 = 16845.421875;
 
+    map.load_adt(0, 1).unwrap();
+
     map.load_adt_at(X, Y).unwrap();
 
     let heights = map.find_heights(X, Y).unwrap();

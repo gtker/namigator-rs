@@ -1,7 +1,7 @@
 #[cfg(test)]
 mod test;
 
-use core::ffi::{c_char, c_float, c_uchar, c_uint};
+use core::ffi::{c_char, c_float, c_int, c_uchar, c_uint};
 
 #[repr(C)]
 #[derive(Debug)]
@@ -144,6 +144,14 @@ extern "C" {
 
     pub fn pathfind_load_all_adts(map: *const Map, amount_of_adts_loaded: *const c_uint)
         -> c_uchar;
+
+    pub fn pathfind_load_adt(
+        map: *const Map,
+        x: c_int,
+        y: c_int,
+        out_adt_x: *const c_float,
+        out_adt_y: *const c_float,
+    ) -> c_uchar;
 
     pub fn pathfind_load_adt_at(
         map: *const Map,

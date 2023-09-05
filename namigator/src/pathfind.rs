@@ -3,8 +3,8 @@ use crate::util::path_to_cstr;
 use namigator_sys::{
     pathfind_find_height, pathfind_find_heights, pathfind_find_path,
     pathfind_find_random_point_around_circle, pathfind_free_map, pathfind_get_zone_and_area,
-    pathfind_line_of_sight, pathfind_load_adt_at, pathfind_load_all_adts, pathfind_new_map, Vertex,
-    BUFFER_TOO_SMALL, SUCCESS,
+    pathfind_line_of_sight, pathfind_load_adt, pathfind_load_adt_at, pathfind_load_all_adts,
+    pathfind_new_map, Vertex, BUFFER_TOO_SMALL, SUCCESS,
 };
 use std::ffi::{c_float, c_uint, CString};
 use std::path::Path;
@@ -71,6 +71,27 @@ impl PathfindMap {
         }
 
         Ok(adts_loaded)
+    }
+
+    pub fn load_adt(&mut self, x: i32, y: i32) -> Result<(f32, f32), NamigatorError> {
+        let mut out_adt_x: f32 = 0.0;
+        let mut out_adt_y: f32 = 0.0;
+
+        let result = unsafe {
+            pathfind_load_adt(
+                self.map,
+                x,
+                y,
+                &mut out_adt_x as *const f32,
+                &mut out_adt_y as *const f32,
+            )
+        };
+
+        if result == SUCCESS {
+            Ok((out_adt_x, out_adt_y))
+        } else {
+            Err(error_code_to_error(result))
+        }
     }
 
     pub fn load_adt_at(&mut self, x: f32, y: f32) -> Result<(f32, f32), NamigatorError> {
