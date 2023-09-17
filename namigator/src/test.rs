@@ -18,10 +18,11 @@ fn test_both() {
     }
 
     test_build(&output_directory, &data_directory);
+    test_pathfind(output_directory);
 }
 
 fn test_build(output_directory: &str, data_directory: &str) {
-    let threads = 8;
+    let threads = std::thread::available_parallelism().unwrap().get() as u32;
 
     assert!(!bvh_files_exist(output_directory).unwrap());
     assert!(!map_files_exist(output_directory, MAP_NAME).unwrap());
@@ -34,7 +35,6 @@ fn test_build(output_directory: &str, data_directory: &str) {
         },
     }
     build_map(data_directory, output_directory, MAP_NAME, "", threads).unwrap();
-    test_pathfind(output_directory);
 
     assert!(bvh_files_exist(output_directory).unwrap());
     assert!(map_files_exist(output_directory, MAP_NAME).unwrap());
