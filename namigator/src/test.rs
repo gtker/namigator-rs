@@ -19,6 +19,15 @@ fn test_both() {
 
     test_build(&output_directory, &data_directory);
     test_pathfind(output_directory);
+
+    #[cfg(feature = "vanilla")]
+    test_vanilla(output_directory);
+
+    #[cfg(feature = "tbc")]
+    test_tbc(output_directory);
+
+    #[cfg(feature = "wrath")]
+    test_wrath(output_directory);
 }
 
 fn test_build(output_directory: &str, data_directory: &str) {
@@ -120,7 +129,7 @@ const POINT: Vector3d = Vector3d {
 const POINT_DISTANCE: f32 = 10.0;
 
 macro_rules! test_map {
-    ($ty_name:ident) => {
+    ($ty_name:ident, $zone_and_area:expr) => {
         assert!(!$ty_name.adt_loaded(ADT_COORD_X, ADT_COORD_Y).unwrap());
         $ty_name.load_adt(ADT_COORD_X, ADT_COORD_Y).unwrap();
         assert!($ty_name.adt_loaded(ADT_COORD_X, ADT_COORD_Y).unwrap());
@@ -144,8 +153,8 @@ macro_rules! test_map {
             .get_zone_and_area(ADT_X, ADT_Y, ADT_HEIGHTS[0])
             .unwrap();
 
-        assert_eq!(zone, ZONE_AND_AREA);
-        assert_eq!(area, ZONE_AND_AREA);
+        assert_eq!(zone, $zone_and_area);
+        assert_eq!(area, $zone_and_area);
 
         let should_fail = $ty_name
             .line_of_sight(LINE_OF_SIGHT_SHOULD_FAIL_FROM, LINE_OF_SIGHT_SHOULD_FAIL_TO)
@@ -183,7 +192,32 @@ macro_rules! test_map {
 fn test_pathfind(output_directory: &str) {
     let mut map = PathfindMap::new(output_directory, MAP_NAME).unwrap();
 
-    test_map!(map);
+    test_map!(map, ZONE_AND_AREA);
+}
+
+#[cfg(feature = "vanilla")]
+fn test_vanilla(output_directory: &str) {
+    let mut map =
+        crate::vanilla::VanillaMap::new(output_directory, crate::vanilla::Map::DevelopmentLand)
+            .unwrap();
+
+    test_map!(map, crate::vanilla::Area::try_from(ZONE_AND_AREA).unwrap());
+}
+
+#[cfg(feature = "tbc")]
+fn test_tbc(output_directory: &str) {
+    let mut map =
+        crate::tbc::TbcMap::new(output_directory, crate::tbc::Map::DevelopmentLand).unwrap();
+
+    test_map!(map, crate::tbc::Area::try_from(ZONE_AND_AREA).unwrap());
+}
+
+#[cfg(feature = "wrath")]
+fn test_wrath(output_directory: &str) {
+    let mut map =
+        crate::wrath::WrathMap::new(output_directory, crate::wrath::Map::DevelopmentLand).unwrap();
+
+    test_map!(map, crate::wrath::Area::try_from(ZONE_AND_AREA).unwrap());
 }
 
 fn distance(from_x: f32, from_y: f32, from_z: f32, to_x: f32, to_y: f32, to_z: f32) -> f32 {
