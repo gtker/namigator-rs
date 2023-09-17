@@ -18,7 +18,7 @@ macro_rules! specific_pathfind {
 
         #[derive(Debug)]
         pub struct $ty_name {
-            map: $crate::PathfindMap,
+            map: $crate::raw::PathfindMap,
         }
 
         impl $ty_name {
@@ -31,7 +31,7 @@ macro_rules! specific_pathfind {
                     map_name: &str,
                 ) -> Result<$ty_name, $crate::error::NamigatorError> {
                     Ok($ty_name {
-                        map: $crate::PathfindMap::new(data_path, map_name)?,
+                        map: $crate::raw::PathfindMap::new(data_path, map_name)?,
                     })
                 }
 
@@ -85,7 +85,7 @@ macro_rules! specific_pathfind {
                 &mut self,
                 start: $crate::Vector3d,
                 stop: $crate::Vector3d,
-            ) -> Result<&[$crate::Vector3d], NamigatorError> {
+            ) -> Result<&[$crate::Vector3d], $crate::error::NamigatorError> {
                 self.map.find_path(start, stop)
             }
 
@@ -117,7 +117,7 @@ macro_rules! specific_pathfind {
                 &self,
                 start: $crate::Vector3d,
                 radius: f32,
-            ) -> Result<$crate::Vector3d, NamigatorError> {
+            ) -> Result<$crate::Vector3d, $crate::error::NamigatorError> {
                 self.map.find_random_point_around_circle(start, radius)
             }
         }

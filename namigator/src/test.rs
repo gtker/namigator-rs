@@ -1,7 +1,8 @@
 use crate::build::{build_bvh, build_map};
 use crate::error::NamigatorError;
 use crate::pathfind::PathfindMap;
-use crate::{bvh_files_exist, map_files_exist, Vector2d, Vector3d};
+use crate::raw::{bvh_files_exist, map_files_exist};
+use crate::{Vector2d, Vector3d};
 use std::path::Path;
 
 const MAP_NAME: &str = "development";
