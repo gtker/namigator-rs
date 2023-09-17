@@ -119,65 +119,71 @@ const POINT: Vector3d = Vector3d {
 
 const POINT_DISTANCE: f32 = 10.0;
 
+macro_rules! test_map {
+    ($ty_name:ident) => {
+        assert!(!$ty_name.adt_loaded(ADT_COORD_X, ADT_COORD_Y).unwrap());
+        $ty_name.load_adt(ADT_COORD_X, ADT_COORD_Y).unwrap();
+        assert!($ty_name.adt_loaded(ADT_COORD_X, ADT_COORD_Y).unwrap());
+        $ty_name.unload_adt(ADT_COORD_X, ADT_COORD_Y).unwrap();
+        assert!(!$ty_name.adt_loaded(ADT_COORD_X, ADT_COORD_Y).unwrap());
+
+        $ty_name.load_adt_at(ADT_X, ADT_Y).unwrap();
+
+        let heights = $ty_name.find_heights(ADT_X, ADT_Y).unwrap();
+        assert_eq!(heights.len(), ADT_HEIGHTS.len());
+        assert_eq!(heights[0], ADT_HEIGHTS[0]);
+        assert_eq!(heights[1], ADT_HEIGHTS[1]);
+
+        $ty_name.load_all_adts().unwrap();
+
+        let path = $ty_name.find_path(PATH_FIND_FROM, PATH_FIND_TO).unwrap();
+
+        assert!(path.len() >= PATH_FIND_MAX_STEPS);
+
+        let (zone, area) = $ty_name
+            .get_zone_and_area_raw(ADT_X, ADT_Y, ADT_HEIGHTS[0])
+            .unwrap();
+
+        assert_eq!(zone, ZONE_AND_AREA);
+        assert_eq!(area, ZONE_AND_AREA);
+
+        let should_fail = $ty_name
+            .line_of_sight(LINE_OF_SIGHT_SHOULD_FAIL_FROM, LINE_OF_SIGHT_SHOULD_FAIL_TO)
+            .unwrap();
+        assert!(!should_fail);
+
+        let should_pass = $ty_name
+            .line_of_sight(LINE_OF_SIGHT_SHOULD_PASS_FROM, LINE_OF_SIGHT_SHOULD_PASS_TO)
+            .unwrap();
+        assert!(should_pass);
+
+        let should_pass_doodad = $ty_name
+            .line_of_sight(
+                LINE_OF_SIGHT_SHOULD_PASS_DOODAD_FROM,
+                LINE_OF_SIGHT_SHOULD_PASS_DOODAD_TO,
+            )
+            .unwrap();
+        assert!(should_pass_doodad);
+
+        let z = $ty_name
+            .find_height(FIND_HEIGHT_START, FIND_HEIGTH_STOP)
+            .unwrap();
+        assert_eq!(z, FIND_HEIGHT_RESULT);
+
+        let out = $ty_name
+            .find_random_point_around_circle(POINT, POINT_DISTANCE)
+            .unwrap();
+
+        let distance = distance(out.x, out.y, out.z, POINT.x, POINT.y, POINT.z);
+
+        assert!(distance < POINT_DISTANCE);
+    };
+}
+
 fn test_pathfind(output_directory: &str) {
     let mut map = PathfindMap::new(output_directory, MAP_NAME).unwrap();
 
-    assert!(!map.adt_loaded(ADT_COORD_X, ADT_COORD_Y).unwrap());
-    map.load_adt(ADT_COORD_X, ADT_COORD_Y).unwrap();
-    assert!(map.adt_loaded(ADT_COORD_X, ADT_COORD_Y).unwrap());
-    map.unload_adt(ADT_COORD_X, ADT_COORD_Y).unwrap();
-    assert!(!map.adt_loaded(ADT_COORD_X, ADT_COORD_Y).unwrap());
-
-    map.load_adt_at(ADT_X, ADT_Y).unwrap();
-
-    let heights = map.find_heights(ADT_X, ADT_Y).unwrap();
-    assert_eq!(heights.len(), ADT_HEIGHTS.len());
-    assert_eq!(heights[0], ADT_HEIGHTS[0]);
-    assert_eq!(heights[1], ADT_HEIGHTS[1]);
-
-    map.load_all_adts().unwrap();
-
-    let path = map.find_path(PATH_FIND_FROM, PATH_FIND_TO).unwrap();
-
-    assert!(path.len() >= PATH_FIND_MAX_STEPS);
-
-    let (zone, area) = map
-        .get_zone_and_area_raw(ADT_X, ADT_Y, ADT_HEIGHTS[0])
-        .unwrap();
-
-    assert_eq!(zone, ZONE_AND_AREA);
-    assert_eq!(area, ZONE_AND_AREA);
-
-    let should_fail = map
-        .line_of_sight(LINE_OF_SIGHT_SHOULD_FAIL_FROM, LINE_OF_SIGHT_SHOULD_FAIL_TO)
-        .unwrap();
-    assert!(!should_fail);
-
-    let should_pass = map
-        .line_of_sight(LINE_OF_SIGHT_SHOULD_PASS_FROM, LINE_OF_SIGHT_SHOULD_PASS_TO)
-        .unwrap();
-    assert!(should_pass);
-
-    let should_pass_doodad = map
-        .line_of_sight(
-            LINE_OF_SIGHT_SHOULD_PASS_DOODAD_FROM,
-            LINE_OF_SIGHT_SHOULD_PASS_DOODAD_TO,
-        )
-        .unwrap();
-    assert!(should_pass_doodad);
-
-    let z = map
-        .find_height(FIND_HEIGHT_START, FIND_HEIGTH_STOP)
-        .unwrap();
-    assert_eq!(z, FIND_HEIGHT_RESULT);
-
-    let out = map
-        .find_random_point_around_circle(POINT, POINT_DISTANCE)
-        .unwrap();
-
-    let distance = distance(out.x, out.y, out.z, POINT.x, POINT.y, POINT.z);
-
-    assert!(distance < POINT_DISTANCE);
+    test_map!(map);
 }
 
 fn distance(from_x: f32, from_y: f32, from_z: f32, to_x: f32, to_y: f32, to_z: f32) -> f32 {
