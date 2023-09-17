@@ -38,6 +38,56 @@ macro_rules! specific_pathfind {
                 inner(data_path.as_ref(), map.directory_name())
             }
 
+            pub fn build_gameobjects(
+                data_path: impl AsRef<std::path::Path>,
+                output_path: impl AsRef<std::path::Path>,
+                threads: u32,
+            ) -> Result<(), $crate::NamigatorError> {
+                fn inner(
+                    data_path: &std::path::Path,
+                    output_path: &std::path::Path,
+                    threads: u32,
+                ) -> Result<(), $crate::NamigatorError> {
+                    if !$crate::raw::bvh_files_exist(output_path)? {
+                        $crate::build::build_bvh(data_path, output_path, threads)?;
+                    }
+
+                    Ok(())
+                }
+
+                inner(data_path.as_ref(), output_path.as_ref(), threads)
+            }
+
+            pub fn build_gameobjects_and_map(
+                data_path: impl AsRef<std::path::Path>,
+                output_path: impl AsRef<std::path::Path>,
+                map: $map,
+                threads: u32,
+            ) -> Result<$ty_name, $crate::NamigatorError> {
+                fn inner(
+                    data_path: &std::path::Path,
+                    output_path: &std::path::Path,
+                    map: $map,
+                    threads: u32,
+                ) -> Result<$ty_name, $crate::NamigatorError> {
+                    $ty_name::build_gameobjects(data_path, output_path, threads)?;
+
+                    if !$crate::raw::map_files_exist(output_path, map.directory_name())? {
+                        $crate::build::build_map(
+                            data_path,
+                            output_path,
+                            map.directory_name(),
+                            "",
+                            threads,
+                        )?;
+                    }
+
+                    $ty_name::new(output_path, map)
+                }
+
+                inner(data_path.as_ref(), output_path.as_ref(), map, threads)
+            }
+
             pub fn load_all_adts(&mut self) -> Result<u32, $crate::error::NamigatorError> {
                 self.map.load_all_adts()
             }
