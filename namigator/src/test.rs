@@ -141,7 +141,7 @@ macro_rules! test_map {
         assert!(path.len() >= PATH_FIND_MAX_STEPS);
 
         let (zone, area) = $ty_name
-            .get_zone_and_area_raw(ADT_X, ADT_Y, ADT_HEIGHTS[0])
+            .get_zone_and_area(ADT_X, ADT_Y, ADT_HEIGHTS[0])
             .unwrap();
 
         assert_eq!(zone, ZONE_AND_AREA);

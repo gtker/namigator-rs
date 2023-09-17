@@ -32,7 +32,7 @@ pub mod raw {
     //!
     //! let mut azeroth = PathfindMap::new(output_path, "Azeroth")?;
     //! azeroth.load_all_adts()?;
-    //! let (zone, area) = azeroth.get_zone_and_area_raw(-8949.95, -132.493, 83.5312)?;
+    //! let (zone, area) = azeroth.get_zone_and_area(-8949.95, -132.493, 83.5312)?;
     //! assert_eq!(zone, 12);
     //! assert_eq!(area, 9);
     //!

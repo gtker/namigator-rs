@@ -14,6 +14,7 @@ pub fn path_to_cstr(p: &Path) -> Result<CString, NamigatorError> {
 #[cfg(any(feature = "vanilla", feature = "tbc", feature = "wrath"))]
 macro_rules! specific_pathfind {
     ($map:ty, $ty_name:ident, $zone_ty:ty, $area_ty:ty) => {
+        pub use $area_ty;
         pub use $map;
 
         #[derive(Debug)]
@@ -126,7 +127,7 @@ macro_rules! specific_pathfind {
                 y: f32,
                 z: f32,
             ) -> Result<($zone_ty, $area_ty), $crate::error::NamigatorError> {
-                let (zone, area) = self.map.get_zone_and_area_raw(x, y, z)?;
+                let (zone, area) = self.map.get_zone_and_area(x, y, z)?;
 
                 Ok((zone.try_into().unwrap(), area.try_into().unwrap()))
             }
@@ -158,9 +159,9 @@ macro_rules! specific_pathfind {
             pub fn find_height(
                 &self,
                 from: $crate::Vector3d,
-                to: $crate::Vector3d,
-            ) -> Result<bool, $crate::error::NamigatorError> {
-                self.map.line_of_sight(from, to)
+                to: $crate::Vector2d,
+            ) -> Result<f32, $crate::error::NamigatorError> {
+                self.map.find_height(from, to)
             }
 
             pub fn find_random_point_around_circle(

@@ -138,12 +138,7 @@ impl PathfindMap {
         }
     }
 
-    pub fn get_zone_and_area_raw(
-        &self,
-        x: f32,
-        y: f32,
-        z: f32,
-    ) -> Result<(u32, u32), NamigatorError> {
+    pub fn get_zone_and_area(&self, x: f32, y: f32, z: f32) -> Result<(u32, u32), NamigatorError> {
         let mut out_zone: c_uint = 0;
         let mut out_area: c_uint = 0;
 
