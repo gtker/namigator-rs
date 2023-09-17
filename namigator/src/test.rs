@@ -10,7 +10,7 @@ const MAP_NAME: &str = "development";
 #[test]
 fn test_both() {
     let output_directory = "/tmp/namirstest";
-    let data_directory = "/tmp/test";
+    let data_directory = option_env!("NAMIGATOR_RS_TEST_DATA").unwrap_or("/tmp/test");
 
     let output = Path::new(output_directory);
     if output.exists() {
