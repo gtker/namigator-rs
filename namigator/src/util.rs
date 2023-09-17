@@ -14,6 +14,8 @@ pub fn path_to_cstr(p: &Path) -> Result<CString, NamigatorError> {
 #[cfg(any(feature = "vanilla", feature = "tbc", feature = "wrath"))]
 macro_rules! specific_pathfind {
     ($map:ty, $ty_name:ident, $zone_ty:ty, $area_ty:ty) => {
+        pub use $map;
+
         #[derive(Debug)]
         pub struct $ty_name {
             map: $crate::PathfindMap,
