@@ -22,6 +22,9 @@ macro_rules! specific_pathfind {
             map: $crate::raw::PathfindMap,
         }
 
+        // SAFETY: Namigator should allow this.
+        unsafe impl Send for $ty_name {}
+
         impl $ty_name {
             pub fn new(
                 data_path: impl AsRef<std::path::Path>,

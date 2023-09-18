@@ -27,6 +27,9 @@ pub struct PathfindMap {
 
 const INITIAL_VEC_SIZE: usize = 10;
 
+// SAFETY: Namigator should allow this.
+unsafe impl Send for PathfindMap {}
+
 impl PathfindMap {
     pub fn new(data_path: impl AsRef<Path>, map_name: &str) -> Result<Self, NamigatorError> {
         fn inner(data_path: &Path, map_name: &str) -> Result<PathfindMap, NamigatorError> {
