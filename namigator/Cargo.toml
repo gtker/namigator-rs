@@ -10,7 +10,7 @@ wrath = ["wow_world_base/wrath", "wow_world_base/extended"]
 
 [dependencies]
 namigator-sys = {path = "../namigator-sys"}
-wow_world_base = {path = "../../wow_messages/wow_world_base", features = ["shared"] }
+wow_world_base = { git="https://github.com/gtker/wow_messages.git", rev = "e8dc643aea0647083e5f5a1fa6d2c5e4fb274d08", features = ["shared"]}
 
 [package.metadata.docs.rs]
 all-features = true
