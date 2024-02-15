@@ -2,6 +2,14 @@
 name = "namigator"
 version = "0.1.0"
 edition = "2021"
+description = "Rust bindings for the namigator pathfinding library for World of Warcraft."
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/gtker/namigator-rs"
+keywords = ["namigator", "pathfinding", "wow", "world-of-warcraft", "line-of-sight"]
+categories = ["game-development", "api-bindings"]
+readme = "README.md"
+authors = ["Gtker <github@gtker.com"]
+rust-version = "1.64.0"
 
 [features]
 vanilla = ["wow_world_base/vanilla", "wow_world_base/extended"]

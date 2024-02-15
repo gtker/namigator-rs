@@ -1,10 +1,9 @@
-# `namigator-sys`
+# `namigator`
 
-Crate containing direct bindings for the [namigator pathfinding library for World of Warcraft version 1.12.x, 2.4.3.8606, and 3.3.5.x](https://github.com/namreeb/namigator).
+Crate containing Rust bindings for the [namigator pathfinding library for World of Warcraft version 1.12.x, 2.4.3.8606, and 3.3.5.x](https://github.com/namreeb/namigator).
 
 ## Usage
 
-You probably should not use this crate directly, instead add the `namigator` crate with:
 Add the crate with the required features:
 
  ```bash
@@ -12,7 +11,6 @@ Add the crate with the required features:
  ```
 
 Then [read the docs](https://crates.io/crates/namigator).
-
 
 ## License
 
