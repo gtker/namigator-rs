@@ -1,10 +1,10 @@
 use crate::{
     mapbuild_build_bvh, mapbuild_build_map, mapbuild_bvh_files_exist, mapbuild_map_files_exist,
     pathfind_find_height, pathfind_find_heights, pathfind_find_path,
-    pathfind_find_random_point_around_circle, pathfind_free_map, pathfind_get_zone_and_area,
-    pathfind_is_adt_loaded, pathfind_line_of_sight, pathfind_load_adt, pathfind_load_adt_at,
-    pathfind_load_all_adts, pathfind_new_map, pathfind_unload_adt, Map, Vertex, FAILED_TO_OPEN_DBC,
-    SUCCESS,
+    pathfind_find_point_in_between_vectors, pathfind_find_random_point_around_circle,
+    pathfind_free_map, pathfind_get_zone_and_area, pathfind_has_adts, pathfind_is_adt_loaded,
+    pathfind_line_of_sight, pathfind_load_adt, pathfind_load_adt_at, pathfind_load_all_adts,
+    pathfind_new_map, pathfind_unload_adt, Map, Vertex, FAILED_TO_OPEN_DBC, SUCCESS,
 };
 use core::ffi::{c_float, c_uchar, c_uint};
 use std::ffi::CString;
@@ -76,6 +76,11 @@ fn test_pathfind(output_path: &str) {
     };
     assert!(!map.is_null());
     assert_eq!(result, SUCCESS);
+
+    let mut has_adts = false;
+    let result = unsafe { pathfind_has_adts(map, &mut has_adts) };
+    assert_eq!(result, SUCCESS);
+    assert!(has_adts);
 
     let mut loaded: u8 = 0xFF;
 
@@ -151,6 +156,24 @@ fn test_pathfind(output_path: &str) {
     const END_X: f32 = 16200.13648;
     const END_Y: f32 = 16834.345703;
     const END_Z: f32 = 37.028622;
+
+    let mut vertex = Vertex::default();
+    assert_eq!(
+        unsafe {
+            pathfind_find_point_in_between_vectors(
+                map,
+                1.0,
+                START_X,
+                START_Y,
+                START_Z,
+                END_X,
+                END_Y,
+                END_Z,
+                &mut vertex,
+            )
+        },
+        SUCCESS
+    );
 
     const BUFFER_LENGTH: usize = 100;
     let buffer = [Vertex {

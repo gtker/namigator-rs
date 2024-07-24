@@ -2,10 +2,10 @@ use crate::error::{error_code_to_error, NamigatorError};
 use crate::util::path_to_cstr;
 use namigator_sys::{
     pathfind_find_height, pathfind_find_heights, pathfind_find_path,
-    pathfind_find_random_point_around_circle, pathfind_free_map, pathfind_get_zone_and_area,
-    pathfind_is_adt_loaded, pathfind_line_of_sight, pathfind_load_adt, pathfind_load_adt_at,
-    pathfind_load_all_adts, pathfind_new_map, pathfind_unload_adt, Vertex, BUFFER_TOO_SMALL,
-    SUCCESS,
+    pathfind_find_point_in_between_vectors, pathfind_find_random_point_around_circle,
+    pathfind_free_map, pathfind_get_zone_and_area, pathfind_has_adts, pathfind_is_adt_loaded,
+    pathfind_line_of_sight, pathfind_load_adt, pathfind_load_adt_at, pathfind_load_all_adts,
+    pathfind_new_map, pathfind_unload_adt, Vertex, BUFFER_TOO_SMALL, SUCCESS,
 };
 use std::ffi::{c_float, c_uint, CString};
 use std::path::Path;
@@ -62,6 +62,17 @@ impl PathfindMap {
             })
         }
         inner(data_path.as_ref(), map_name)
+    }
+
+    pub fn has_adts(&self) -> Result<bool, NamigatorError> {
+        let mut has_adts = false;
+        let result = unsafe { pathfind_has_adts(self.map, &mut has_adts) };
+
+        if result != SUCCESS {
+            return Err(error_code_to_error(result));
+        }
+
+        Ok(has_adts)
     }
 
     pub fn load_all_adts(&mut self) -> Result<u32, NamigatorError> {
@@ -255,6 +266,38 @@ impl PathfindMap {
         }
 
         Err(error_code_to_error(result))
+    }
+
+    pub fn find_point_between_points(
+        &self,
+        distance: f32,
+        from: Vector3d,
+        to: Vector3d,
+    ) -> Result<Vector3d, NamigatorError> {
+        let mut vertex = Vertex::default();
+        let result = unsafe {
+            pathfind_find_point_in_between_vectors(
+                self.map,
+                distance,
+                from.x,
+                from.y,
+                from.z,
+                to.x,
+                to.y,
+                to.z,
+                &mut vertex,
+            )
+        };
+
+        if result != SUCCESS {
+            return Err(error_code_to_error(result));
+        }
+
+        Ok(Vector3d {
+            x: vertex.x,
+            y: vertex.y,
+            z: vertex.z,
+        })
     }
 
     pub fn line_of_sight(&self, from: Vector3d, to: Vector3d) -> Result<bool, NamigatorError> {

@@ -92,6 +92,8 @@ pub enum NamigatorError {
     UnknownZoneAndArea,
     FailedToLoadAdt,
     MapDoesNotHaveAdt,
+    FailedToFindPointBetweenVectors,
+
     UnknownException,
 
     MapIsNullPointer,
@@ -217,6 +219,9 @@ pub(crate) fn error_code_to_error(v: u8) -> NamigatorError {
         namigator_sys::FAILED_TO_LOAD_ADT => NamigatorError::FailedToLoadAdt,
         namigator_sys::MAP_DOES_NOT_HAVE_ADT => NamigatorError::MapDoesNotHaveAdt,
         namigator_sys::UNKNOWN_EXCEPTION => NamigatorError::UnknownException,
+        namigator_sys::FAILED_TO_FIND_POINT_BETWEEN_VECTORS => {
+            NamigatorError::FailedToFindPointBetweenVectors
+        }
         _ => NamigatorError::UnknownException,
     }
 }
@@ -363,6 +368,9 @@ impl Display for NamigatorError {
             NamigatorError::FailedToLoadAdt => f.write_str("Failed to load ADT"),
             NamigatorError::MapDoesNotHaveAdt => f.write_str("Map does not have ADT"),
             NamigatorError::MapIsNullPointer => f.write_str("Map is null pointer"),
+            NamigatorError::FailedToFindPointBetweenVectors => {
+                f.write_str("Failed to find point between vectors")
+            }
         }
     }
 }

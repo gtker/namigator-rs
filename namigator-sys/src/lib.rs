@@ -130,6 +130,8 @@ pub const MAP_DOES_NOT_HAVE_ADT: u8 = 87;
 
 pub const UNABLE_TO_FIND_RANDOM_POINT_IN_CIRCLE: u8 = 88;
 
+pub const FAILED_TO_FIND_POINT_BETWEEN_VECTORS: u8 = 89;
+
 pub const UNKNOWN_EXCEPTION: u8 = 0xFF;
 
 #[link(name = "namigator")]
@@ -170,6 +172,8 @@ extern "C" {
         out_loaded: *const u8,
     ) -> c_uchar;
 
+    pub fn pathfind_has_adts(map: *const Map, has_adts: *const bool) -> c_uchar;
+
     pub fn pathfind_get_zone_and_area(
         map: *const Map,
         x: c_float,
@@ -177,6 +181,18 @@ extern "C" {
         z: c_float,
         out_zone: *const c_uint,
         out_area: *const c_uint,
+    ) -> c_uchar;
+
+    pub fn pathfind_find_point_in_between_vectors(
+        map: *const Map,
+        distance: f32,
+        x1: f32,
+        y1: f32,
+        z1: f32,
+        x2: f32,
+        y2: f32,
+        z2: f32,
+        out_vertex: *mut Vertex,
     ) -> c_uchar;
 
     pub fn pathfind_find_path(

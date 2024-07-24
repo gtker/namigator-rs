@@ -227,6 +227,7 @@ fn c_files() -> Vec<PathBuf> {
         stormlib_src_dir().join("libtomcrypt/src/hashes/hash_memory.c"),
         stormlib_src_dir().join("libtomcrypt/src/hashes/md5.c"),
         stormlib_src_dir().join("libtomcrypt/src/hashes/sha1.c"),
+        stormlib_src_dir().join("libtomcrypt/src/hashes/sha256.c"),
         stormlib_src_dir().join("libtomcrypt/src/math/ltm_desc.c"),
         stormlib_src_dir().join("libtomcrypt/src/math/multi.c"),
         stormlib_src_dir().join("libtomcrypt/src/math/rand_prime.c"),
