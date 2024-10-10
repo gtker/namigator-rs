@@ -55,7 +55,7 @@ const ADT_COORD_Y: i32 = 0;
 const ADT_X: f32 = 16271.025391;
 const ADT_Y: f32 = 16845.421875;
 
-const ADT_HEIGHTS: [f32; 2] = [46.30131, 35.611702];
+const ADT_HEIGHTS: [f32; 2] = [46.301346, 35.611702];
 
 const PATH_FIND_FROM: Vector3d = Vector3d {
     x: 16303.294922,
@@ -118,7 +118,7 @@ const FIND_HEIGTH_STOP: Vector2d = Vector2d {
     x: 16208.6,
     y: 16830.7,
 };
-const FIND_HEIGHT_RESULT: f32 = 36.86227;
+const FIND_HEIGHT_RESULT: f32 = 36.862274;
 
 const POINT: Vector3d = Vector3d {
     x: 16303.294922,
