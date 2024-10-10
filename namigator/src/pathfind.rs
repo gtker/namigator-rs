@@ -42,7 +42,7 @@ impl PathfindMap {
                 pathfind_new_map(
                     data_path.as_ptr(),
                     map_name.as_ptr(),
-                    &mut result as *const u8,
+                    &mut result as *mut u8,
                 )
             };
 
@@ -79,7 +79,7 @@ impl PathfindMap {
         let mut adts_loaded: c_uint = 0;
 
         // SAFETY: map is guaranteed to be initialized in a member function
-        let result = unsafe { pathfind_load_all_adts(self.map, &mut adts_loaded as *const c_uint) };
+        let result = unsafe { pathfind_load_all_adts(self.map, &mut adts_loaded as *mut c_uint) };
 
         if result != SUCCESS {
             return Err(error_code_to_error(result));
@@ -97,8 +97,8 @@ impl PathfindMap {
                 self.map,
                 x,
                 y,
-                &mut out_adt_x as *const f32,
-                &mut out_adt_y as *const f32,
+                &mut out_adt_x as *mut f32,
+                &mut out_adt_y as *mut f32,
             )
         };
 
@@ -118,8 +118,8 @@ impl PathfindMap {
                 self.map,
                 x,
                 y,
-                &mut out_adt_x as *const f32,
-                &mut out_adt_y as *const f32,
+                &mut out_adt_x as *mut f32,
+                &mut out_adt_y as *mut f32,
             )
         };
 
@@ -142,8 +142,7 @@ impl PathfindMap {
 
     pub fn adt_loaded(&self, x: i32, y: i32) -> Result<bool, NamigatorError> {
         let mut out_loaded: u8 = 0;
-        let result =
-            unsafe { pathfind_is_adt_loaded(self.map, x, y, &mut out_loaded as *const u8) };
+        let result = unsafe { pathfind_is_adt_loaded(self.map, x, y, &mut out_loaded as *mut u8) };
 
         if result == SUCCESS {
             Ok(out_loaded == 1)
@@ -163,8 +162,8 @@ impl PathfindMap {
                 x,
                 y,
                 z,
-                &mut out_zone as *const c_uint,
-                &mut out_area as *const c_uint,
+                &mut out_zone as *mut c_uint,
+                &mut out_area as *mut c_uint,
             )
         };
 
@@ -193,7 +192,7 @@ impl PathfindMap {
                 stop.z,
                 self.inner_path.as_mut_ptr(),
                 self.inner_path.len() as c_uint,
-                &mut amount_of_vertices as *const c_uint,
+                &mut amount_of_vertices as *mut c_uint,
             )
         };
 
@@ -214,7 +213,7 @@ impl PathfindMap {
                     stop.z,
                     self.inner_path.as_mut_ptr(),
                     self.inner_path.len() as c_uint,
-                    &mut amount_of_vertices as *const c_uint,
+                    &mut amount_of_vertices as *mut c_uint,
                 )
             };
 
@@ -239,7 +238,7 @@ impl PathfindMap {
                 y,
                 self.height.as_mut_ptr(),
                 self.height.len() as c_uint,
-                &mut amount_of_heights as *const c_uint,
+                &mut amount_of_heights as *mut c_uint,
             )
         };
 
@@ -256,7 +255,7 @@ impl PathfindMap {
                     y,
                     self.height.as_mut_ptr(),
                     self.height.len() as c_uint,
-                    &mut amount_of_heights as *const c_uint,
+                    &mut amount_of_heights as *mut c_uint,
                 )
             };
 
@@ -313,7 +312,7 @@ impl PathfindMap {
                 to.x,
                 to.y,
                 to.z,
-                &mut los as *const u8,
+                &mut los as *mut u8,
                 doodads,
             )
         };
@@ -345,7 +344,7 @@ impl PathfindMap {
                 start.z,
                 stop.x,
                 stop.y,
-                &mut out_stop_z as *const c_float,
+                &mut out_stop_z as *mut c_float,
             )
         };
 
@@ -372,9 +371,9 @@ impl PathfindMap {
                 start.y,
                 start.z,
                 radius,
-                &mut out_x as *const c_float,
-                &mut out_y as *const c_float,
-                &mut out_z as *const c_float,
+                &mut out_x as *mut c_float,
+                &mut out_y as *mut c_float,
+                &mut out_z as *mut c_float,
             )
         };
 

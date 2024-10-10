@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Changed
+
+* BREAKING: Several out parameters were `*const` instead of `*mut`.
+
 ## [0.1.0] - 2024-10-10
 
 ### Added

@@ -139,28 +139,27 @@ extern "C" {
     pub fn pathfind_new_map(
         data_path: *const c_char,
         map_name: *const c_char,
-        result: *const c_uchar,
+        result: *mut c_uchar,
     ) -> *const Map;
 
     pub fn pathfind_free_map(map: *const Map);
 
-    pub fn pathfind_load_all_adts(map: *const Map, amount_of_adts_loaded: *const c_uint)
-        -> c_uchar;
+    pub fn pathfind_load_all_adts(map: *const Map, amount_of_adts_loaded: *mut c_uint) -> c_uchar;
 
     pub fn pathfind_load_adt(
         map: *const Map,
         x: c_int,
         y: c_int,
-        out_adt_x: *const c_float,
-        out_adt_y: *const c_float,
+        out_adt_x: *mut c_float,
+        out_adt_y: *mut c_float,
     ) -> c_uchar;
 
     pub fn pathfind_load_adt_at(
         map: *const Map,
         x: c_float,
         y: c_float,
-        out_adt_x: *const c_float,
-        out_adt_y: *const c_float,
+        out_adt_x: *mut c_float,
+        out_adt_y: *mut c_float,
     ) -> c_uchar;
 
     pub fn pathfind_unload_adt(map: *const Map, x: c_int, y: c_int) -> c_uchar;
@@ -169,18 +168,18 @@ extern "C" {
         map: *const Map,
         x: c_int,
         y: c_int,
-        out_loaded: *const u8,
+        out_loaded: *mut u8,
     ) -> c_uchar;
 
-    pub fn pathfind_has_adts(map: *const Map, has_adts: *const bool) -> c_uchar;
+    pub fn pathfind_has_adts(map: *const Map, has_adts: *mut bool) -> c_uchar;
 
     pub fn pathfind_get_zone_and_area(
         map: *const Map,
         x: c_float,
         y: c_float,
         z: c_float,
-        out_zone: *const c_uint,
-        out_area: *const c_uint,
+        out_zone: *mut c_uint,
+        out_area: *mut c_uint,
     ) -> c_uchar;
 
     pub fn pathfind_find_point_in_between_vectors(
@@ -203,18 +202,18 @@ extern "C" {
         stop_x: c_float,
         stop_y: c_float,
         stop_z: c_float,
-        buffer: *const Vertex,
+        buffer: *mut Vertex,
         buffer_length: c_uint,
-        amount_of_vertices: *const c_uint,
+        amount_of_vertices: *mut c_uint,
     ) -> c_uchar;
 
     pub fn pathfind_find_heights(
         map: *const Map,
         x: c_float,
         y: c_float,
-        buffer: *const c_float,
+        buffer: *mut c_float,
         buffer_length: c_uint,
-        amount_of_heights: *const c_uint,
+        amount_of_heights: *mut c_uint,
     ) -> c_uchar;
 
     pub fn pathfind_find_height(
@@ -224,7 +223,7 @@ extern "C" {
         start_z: c_float,
         stop_x: c_float,
         stop_y: c_float,
-        out_stop_z: *const c_float,
+        out_stop_z: *mut c_float,
     ) -> c_uchar;
 
     pub fn pathfind_line_of_sight(
@@ -235,7 +234,7 @@ extern "C" {
         stop_x: c_float,
         stop_y: c_float,
         stop_z: c_float,
-        line_of_sight: *const u8,
+        line_of_sight: *mut u8,
         doodads: u8,
     ) -> c_uchar;
 
@@ -245,16 +244,16 @@ extern "C" {
         y: c_float,
         z: c_float,
         radius: c_float,
-        out_random_x: *const c_float,
-        out_random_y: *const c_float,
-        out_random_z: *const c_float,
+        out_random_x: *mut c_float,
+        out_random_y: *mut c_float,
+        out_random_z: *mut c_float,
     ) -> c_uchar;
 
     pub fn mapbuild_build_bvh(
         data_path: *const c_char,
         output_path: *const c_char,
         threads: c_uint,
-        amount_of_bvhs_built: *const c_uint,
+        amount_of_bvhs_built: *mut c_uint,
     ) -> c_uchar;
 
     pub fn mapbuild_build_map(
@@ -265,11 +264,11 @@ extern "C" {
         threads: c_uint,
     ) -> c_uchar;
 
-    pub fn mapbuild_bvh_files_exist(output_path: *const c_char, exists: *const u8) -> c_uchar;
+    pub fn mapbuild_bvh_files_exist(output_path: *const c_char, exists: *mut u8) -> c_uchar;
 
     pub fn mapbuild_map_files_exist(
         output_path: *const c_char,
         map_name: *const c_char,
-        exists: *const u8,
+        exists: *mut u8,
     ) -> c_uchar;
 }

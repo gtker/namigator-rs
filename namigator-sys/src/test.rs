@@ -29,7 +29,7 @@ fn test_build(output_path: &str, data_directory: &str) {
             data_path.as_ptr(),
             output_path.as_ptr(),
             8,
-            &mut amount_of_bvhs_built as *const c_uint,
+            &mut amount_of_bvhs_built as *mut c_uint,
         )
     };
     assert_eq!(result, FAILED_TO_OPEN_DBC);
@@ -71,7 +71,7 @@ fn test_pathfind(output_path: &str) {
         pathfind_new_map(
             data_path.as_ptr(),
             map_name.as_ptr(),
-            &mut result as *const u8,
+            &mut result as *mut u8,
         )
     };
     assert!(!map.is_null());
@@ -84,46 +84,32 @@ fn test_pathfind(output_path: &str) {
 
     let mut loaded: u8 = 0xFF;
 
-    let result = unsafe { pathfind_is_adt_loaded(map, 0, 1, &mut loaded as *const u8) };
+    let result = unsafe { pathfind_is_adt_loaded(map, 0, 1, &mut loaded as *mut u8) };
     assert_eq!(result, SUCCESS);
     assert_eq!(loaded, 0);
 
     let mut adt_x: f32 = 0.0;
     let mut adt_y: f32 = 0.0;
-    let result = unsafe {
-        pathfind_load_adt(
-            map,
-            0,
-            1,
-            &mut adt_x as *const f32,
-            &mut adt_y as *const f32,
-        )
-    };
+    let result =
+        unsafe { pathfind_load_adt(map, 0, 1, &mut adt_x as *mut f32, &mut adt_y as *mut f32) };
     assert_eq!(result, SUCCESS);
 
-    let result = unsafe { pathfind_is_adt_loaded(map, 0, 1, &mut loaded as *const u8) };
+    let result = unsafe { pathfind_is_adt_loaded(map, 0, 1, &mut loaded as *mut u8) };
     assert_eq!(result, SUCCESS);
     assert_eq!(loaded, 1);
 
     let result = unsafe { pathfind_unload_adt(map, 0, 1) };
     assert_eq!(result, SUCCESS);
 
-    let result = unsafe { pathfind_is_adt_loaded(map, 0, 1, &mut loaded as *const u8) };
+    let result = unsafe { pathfind_is_adt_loaded(map, 0, 1, &mut loaded as *mut u8) };
     assert_eq!(result, SUCCESS);
     assert_eq!(loaded, 0);
 
     const X: f32 = 16271.025391;
     const Y: f32 = 16845.421875;
 
-    let result = unsafe {
-        pathfind_load_adt_at(
-            map,
-            X,
-            Y,
-            &mut adt_x as *const f32,
-            &mut adt_y as *const f32,
-        )
-    };
+    let result =
+        unsafe { pathfind_load_adt_at(map, X, Y, &mut adt_x as *mut f32, &mut adt_y as *mut f32) };
     assert_eq!(result, SUCCESS);
 
     const SIZE: usize = 2;
@@ -136,9 +122,9 @@ fn test_pathfind(output_path: &str) {
             map,
             X,
             Y,
-            &mut buf as *const f32,
+            &mut buf as *mut f32,
             SIZE as u32,
-            &mut amount_of_vertices as *const u32,
+            &mut amount_of_vertices as *mut u32,
         )
     };
 
@@ -148,7 +134,7 @@ fn test_pathfind(output_path: &str) {
     assert_eq!(amount_of_vertices, 2);
 
     let mut amount_of_adts_loaded: u32 = 0;
-    let _a = unsafe { pathfind_load_all_adts(map, &mut amount_of_adts_loaded as *const u32) };
+    let _a = unsafe { pathfind_load_all_adts(map, &mut amount_of_adts_loaded as *mut u32) };
 
     const START_X: f32 = 16303.294922;
     const START_Y: f32 = 16789.242188;
@@ -176,7 +162,7 @@ fn test_pathfind(output_path: &str) {
     );
 
     const BUFFER_LENGTH: usize = 100;
-    let buffer = [Vertex {
+    let mut buffer = [Vertex {
         x: 0.0,
         y: 0.0,
         z: 0.0,
@@ -192,9 +178,9 @@ fn test_pathfind(output_path: &str) {
             END_X,
             END_Y,
             END_Z,
-            buffer.as_ptr(),
+            buffer.as_mut_ptr(),
             BUFFER_LENGTH as u32,
-            &mut amount_of_vertices as *const u32,
+            &mut amount_of_vertices as *mut u32,
         )
     };
     assert_eq!(result, SUCCESS);
@@ -210,8 +196,8 @@ fn test_pathfind(output_path: &str) {
             X,
             Y,
             46.301323,
-            &mut zone as *const u32,
-            &mut area as *const u32,
+            &mut zone as *mut u32,
+            &mut area as *mut u32,
         )
     };
 
@@ -278,7 +264,7 @@ fn test_pathfind(output_path: &str) {
             start_z,
             stop_x,
             stop_y,
-            &mut out_stop_z as *const c_float,
+            &mut out_stop_z as *mut c_float,
         )
     };
     assert_eq!(result, SUCCESS);
@@ -298,9 +284,9 @@ fn test_pathfind(output_path: &str) {
             POINT_Y,
             POINT_Z,
             POINT_DISTANCE,
-            &mut out_x as *const c_float,
-            &mut out_y as *const c_float,
-            &mut out_z as *const c_float,
+            &mut out_x as *mut c_float,
+            &mut out_y as *mut c_float,
+            &mut out_z as *mut c_float,
         )
     };
     assert_eq!(result, SUCCESS);
@@ -328,7 +314,7 @@ fn call_line_of_sight(map: *const Map, start: Vertex, end: Vertex) -> bool {
             end.x,
             end.y,
             end.z,
-            &mut los as *const c_uchar,
+            &mut los as *mut c_uchar,
             doodads,
         );
 
@@ -347,7 +333,7 @@ fn call_line_of_sight(map: *const Map, start: Vertex, end: Vertex) -> bool {
 fn call_exists(output_path: &CString, map_name: &CString) -> (bool, bool) {
     let mut bvh_exists: u8 = 0xFF;
     let success =
-        unsafe { mapbuild_bvh_files_exist(output_path.as_ptr(), &mut bvh_exists as *const u8) };
+        unsafe { mapbuild_bvh_files_exist(output_path.as_ptr(), &mut bvh_exists as *mut u8) };
     assert_eq!(success, SUCCESS);
 
     let mut map_exists: u8 = 0xFF;
@@ -355,7 +341,7 @@ fn call_exists(output_path: &CString, map_name: &CString) -> (bool, bool) {
         mapbuild_map_files_exist(
             output_path.as_ptr(),
             map_name.as_ptr(),
-            &mut map_exists as *const u8,
+            &mut map_exists as *mut u8,
         )
     };
     assert_eq!(success, SUCCESS);

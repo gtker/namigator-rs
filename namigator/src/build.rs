@@ -31,7 +31,7 @@ pub fn build_bvh(
                 data_path.as_ptr(),
                 output_path.as_ptr(),
                 threads,
-                &mut amount_of_bvhs_built as *const c_uint,
+                &mut amount_of_bvhs_built as *mut c_uint,
             )
         };
 
@@ -113,7 +113,7 @@ pub fn map_files_exist(
             mapbuild_map_files_exist(
                 output_path.as_ptr(),
                 map_name.as_ptr(),
-                &mut exists as *const u8,
+                &mut exists as *mut u8,
             )
         };
 
@@ -131,7 +131,7 @@ pub fn bvh_files_exist(output_path: impl AsRef<Path>) -> Result<bool, NamigatorE
         let output_path = path_to_cstr(output_path)?;
         let mut exists: u8 = 0;
         let result =
-            unsafe { mapbuild_bvh_files_exist(output_path.as_ptr(), &mut exists as *const u8) };
+            unsafe { mapbuild_bvh_files_exist(output_path.as_ptr(), &mut exists as *mut u8) };
 
         if result == SUCCESS {
             Ok(exists != 0)
