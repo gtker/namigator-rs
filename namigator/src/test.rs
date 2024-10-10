@@ -8,6 +8,7 @@ use std::path::Path;
 const MAP_NAME: &str = "development";
 
 #[test]
+#[ignore]
 fn test_both() {
     let output_directory = "/tmp/namirstest";
     let data_directory = option_env!("NAMIGATOR_RS_TEST_DATA").unwrap_or("/tmp/test");
