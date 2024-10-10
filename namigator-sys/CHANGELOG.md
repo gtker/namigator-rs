@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+## [0.2.0] - 2024-10-10
+
 ### Changed
 
 * BREAKING: Several out parameters were `*const` instead of `*mut`.
@@ -19,5 +21,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * First release.
 
 <!-- next-url -->
-[Unreleased]: https://github.com/gtker/namigator-rs/compare/namigator-sys-v0.1.0...HEAD
+[Unreleased]: https://github.com/gtker/namigator-rs/compare/namigator-sys-v0.2.0...HEAD
+[0.2.0]: https://github.com/gtker/namigator-rs/compare/namigator-sys-v0.1.0...namigator-sys-v0.2.0
 [0.1.0]: https://github.com/gtker/wow_messages/compare/ebbf1886522131cfdc78d13306c1d1dab3e1ec22...namigator-sys-v0.1.0

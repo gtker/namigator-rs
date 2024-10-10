@@ -1,6 +1,6 @@
 [package]
 name = "namigator-sys"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 description = "Direct bindings for the namigator pathfinding library for World of Warcraft."
 license = "MIT OR Apache-2.0"

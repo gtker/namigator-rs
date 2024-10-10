@@ -17,7 +17,7 @@ tbc = ["wow_world_base/tbc", "wow_world_base/extended"]
 wrath = ["wow_world_base/wrath", "wow_world_base/extended"]
 
 [dependencies]
-namigator-sys = { version = "0.1.0", path = "../namigator-sys"}
+namigator-sys = { version = "0.2.0", path = "../namigator-sys"}
 wow_world_base = { version = "0.3.0", features = ["shared"]}
 
 [package.metadata.docs.rs]
