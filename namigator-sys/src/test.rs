@@ -276,7 +276,7 @@ fn test_pathfind(output_path: &str) {
     const POINT_X: c_float = 16303.294922;
     const POINT_Y: c_float = 16789.242188;
     const POINT_Z: c_float = 45.219631;
-    const POINT_DISTANCE: c_float = 15.0;
+    const POINT_DISTANCE: c_float = 20.0;
     let result = unsafe {
         pathfind_find_random_point_around_circle(
             map,
