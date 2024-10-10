@@ -126,7 +126,7 @@ const POINT: Vector3d = Vector3d {
     z: 45.219631,
 };
 
-const POINT_DISTANCE: f32 = 10.0;
+const POINT_DISTANCE: f32 = 15.0;
 
 macro_rules! test_map {
     ($ty_name:ident, $zone_and_area:expr) => {
